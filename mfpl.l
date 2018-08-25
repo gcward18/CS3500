@@ -1,40 +1,51 @@
-/*
-    Definitions of constants, variables and functions
+
+/*    example.l
+ 
+ 	Example of a lex specification file.
+     
+      To create the lexical analyzer:
+
+      flex example.l
+      g++ lex.yy.c -o lexer
+      lexer < inputFileName
 */
+
 %{
-# define    T_IDENT             1
-# define    T_INTEGER_CONSTANT  2
-# define    T_STRING_CONSTANT   3
-# define    T_UKNOWN            4
+/* 
+Definitions of constants, variables, & function prototypes go here 
+*/
 
-// Returns number of lines that are processed
-int numLines    =   0;
+#define T_IDENT             1
+#define T_INTCONST          2
+#define T_STRING_CONSTANT   3
+#define T_UNKNOWN           4
 
-// Print function to let user know the tokens that are captured
+int numLines = 0;
+
 void printTokenInfo(const char* tokenType, char* lexeme);
 
 %}
 
-/* Definitions of regular expressions */
+/* Defintions of regular expressions go here */
 
-/* Numbers and characters */
-DIGIT       [0-9]
-MANYDIGITS  [0-9]*
-ANYCHAR     \w
-LOWERCASE   [a-z]
-UPPERCASE   [A-Z]
+WSPACE		    [ \t\v\r]+
+NEWLINE         \n
 
-/* Special Characters */
-UNDERSCR    _
-INTCONST    ([-+ ]|[0-9])[0-9]+
-WHITESPACE  [ \n\t\s]
-IDENTCONST  [_a-zA-Z][0-9a-zA-Z_]*
-STRCONST    ["][a-zA-Z0-9_!@#$%^&*]*["]
+DIGIT	        [0-9]
+LETTER          [a-zA-Z]
+
+IDENT			{LETTER}({LETTER}|{DIGIT})* 
+INTCONST        [ +-]{DIGIT}+
+STRCONST        \".*\"
+
 %%
 
-{WHITESPACE}    {
-                return T_UKNOWN;
+
+{STRCONST}      {
+                printTokenInfo("STRCONST", yytext);
+                return T_STRING_CONSTANT;
 }
+
 "lambda"        {
                 printTokenInfo("LAMBDA", yytext);
                 return T_IDENT;
@@ -115,36 +126,41 @@ STRCONST    ["][a-zA-Z0-9_!@#$%^&*]*["]
                 printTokenInfo("NE", yytext);
                 return T_IDENT;
 }
-{INTCONST}      {
-                printTokenInfo("INTCONST", yytext);
-                return T_INTEGER_CONSTANT;
-}
-{IDENTCONST}    {
-                printTokenInfo("IDENT", yytext);
-                return T_STRING_CONSTANT;
-}
-{STRCONST}      {
-                printTokenInfo("STRCONST", yytext);
-                return T_STRING_CONSTANT;
-}
-.               {
-                printTokenInfo("UNKNOWN", yytext);
-                return T_UKNOWN;
-}
+{INTCONST}	{
+				printTokenInfo("INTCONST", yytext);
+				return T_INTCONST;
+			}
+{IDENT}		{
+				printTokenInfo("IDENT", yytext);
+				return T_IDENT;
+			}
+{NEWLINE}		{
+                        numLines++;
+                  }
+{WSPACE}		{ }
+.			{
+				printTokenInfo("UNKNOWN", yytext);
+				return T_UNKNOWN;
+			}
 
 %%
 
-void printTokenInfo(const char* tokenType, char* leme) {
-    printf("TOKEN: %s LEMEME: %s\n", tokenType, leme);
+// User-written code goes here
+
+void printTokenInfo(const char* tokenType, char* lexeme) {
+  printf("TOKEN: %s  LEXEME: %s\n", tokenType, lexeme);
 }
 
-int yywrap(void) {
-    return 1;
-}
+// You should supply a yywrap function.
+// Having it return 1 means only 1 input file will be scanned.
+int yywrap(void) { return 1; }
 
 int main(void) {
-    while ( yylex() );
+  while ( yylex() ) ;  // Keep processing tokens until 0 returned
 
-    printf("Processed %d lines\n", numLines);
-    return 0;
+  printf("Processed %d lines\n", numLines);
+  return 0;
 }
+
+
+
