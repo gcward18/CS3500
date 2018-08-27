@@ -28,23 +28,20 @@ void printTokenInfo(const char* tokenType, char* lexeme);
 
 /* Defintions of regular expressions go here */
 
-WSPACE		    [ \t\v\r]+
+WSPACE		      [ \t\v\r]+
 NEWLINE         \n
+COMMENT         ;.*
 
-DIGIT	        [0-9]
+DIGIT	          [0-9]
 LETTER          [a-zA-Z]
 
-IDENT			{LETTER}({LETTER}|{DIGIT})* 
+IDENT			      [_a-zA-Z][a-zA-Z0-9_]* 
 INTCONST        [ +-]{DIGIT}+
 STRCONST        \".*\"
+INT             [0-9]*
+
 
 %%
-
-
-{STRCONST}      {
-                printTokenInfo("STRCONST", yytext);
-                return T_STRING_CONSTANT;
-}
 
 "lambda"        {
                 printTokenInfo("LAMBDA", yytext);
@@ -79,7 +76,7 @@ STRCONST        \".*\"
                 return T_IDENT;
 }
 "*"             {
-                printTokenInfo("MULTI", yytext);
+                printTokenInfo("MULT", yytext);
                 return T_IDENT;
 }
 "/"             {
@@ -126,29 +123,44 @@ STRCONST        \".*\"
                 printTokenInfo("NE", yytext);
                 return T_IDENT;
 }
-{INTCONST}	{
+"t"             {
+                printTokenInfo("T", yytext);
+                return T_IDENT;
+}
+"nil"           {
+                printTokenInfo("NIL", yytext);
+                return T_IDENT;
+}
+{IDENT}         {
+                printTokenInfo("IDENT", yytext);
+                return T_STRING_CONSTANT;
+}
+{STRCONST}      {
+                printTokenInfo("STRCONST", yytext);
+                return T_STRING_CONSTANT;
+}
+{INTCONST}	    {
 				printTokenInfo("INTCONST", yytext);
 				return T_INTCONST;
-			}
-{IDENT}		{
-				printTokenInfo("IDENT", yytext);
-				return T_IDENT;
-			}
-{NEWLINE}		{
-                        numLines++;
-                  }
-{WSPACE}		{ }
-.			{
+}
+{INT}           {
+				printTokenInfo("INTCONST", yytext);
+				return T_INTCONST;
+}
+{NEWLINE}		    { }
+{COMMENT}       { }
+{WSPACE}		    { }
+.			          {
 				printTokenInfo("UNKNOWN", yytext);
 				return T_UNKNOWN;
-			}
+}
 
 %%
 
 // User-written code goes here
 
 void printTokenInfo(const char* tokenType, char* lexeme) {
-  printf("TOKEN: %s  LEXEME: %s\n", tokenType, lexeme);
+  printf("TOKEN: %s  \tLEXEME: %s\n", tokenType, lexeme);
 }
 
 // You should supply a yywrap function.
@@ -157,8 +169,6 @@ int yywrap(void) { return 1; }
 
 int main(void) {
   while ( yylex() ) ;  // Keep processing tokens until 0 returned
-
-  printf("Processed %d lines\n", numLines);
   return 0;
 }
 
