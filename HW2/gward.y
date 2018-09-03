@@ -37,7 +37,7 @@ extern "C"
 %}
 
 /* Token declarations */
-%token  IDENT INTCONST UNKNOWN FOO
+%token  IDENT INTCONST STRCONST UNKNOWN FOO 
 
 /* Starting point */
 %start		START
@@ -59,7 +59,7 @@ EXPR		: CONST
             }
             | IDENT
             {
-                printTokenInfo("IDENT",yylex);
+                printRule("EXPR","IDENT");
             }
             | "(" PARENTHESIZED_EXPR ")"
             {
@@ -69,19 +69,19 @@ EXPR		: CONST
 
 CONST       : INTCONST
             {
-                printTokenInfo("INTCONST",yylex);
+                printRule("CONST","INTCONST");
             }
-            | "\".*\"" 
+            | STRCONST 
             {
-                printTokenInfo("STRCONST",yylex);
+                printRule("CONST","STRCONST");
             }
             | "t"
             {
-                printTokenInfo("T", yylex);
+                printRule("CONST","t");
             }
             | "nil" 
             {
-                printTokenInfo("NIL", yylex);
+                printRule("CONST","nil");
             }
             ;
 
@@ -171,7 +171,7 @@ PRINT_EXPR      :   "print" EXPR
 
 INPUT_EXPR      :   "input"
                 {
-                    printTokenInfo("INPUT",yylex);
+                    printRule("INPUT_EXPR","INPUT");
                 }
                 ;
 
@@ -201,61 +201,61 @@ BIN_OP          : ARITH_OP
 
 ARITH_OP        : "*" 
                 {
-                    printTokenInfo("MULT",yylex);
+                    printRule("ARITH_OP","MULT");
                 }
                 | "-" 
                 {
-                    printTokenInfo("SUB",yylex);
+                    printRule("ARITH_OP","SUB");
                 }
                 | "/"
                 {
-                    printTokenInfo("DIV",yylex);
+                    printRule("ARITH_OP","DIV");
                 }
                 | "+"
                 {
-                    printTokenInfo("ADD",yylex);
+                    printRule("ARITH_OP","ADD");
                 }
                 ;
 
 LOG_OP          : "and"
                 {
-                    printTokenInfo("AND",yylex);
+                    printRule("LOG_OP","AND");
                 }
                 | "or"
                 {
-                    printTokenInfo("OR",yylex);
+                    printRule("LOG_OP","OR");
                 }
                 ;
 
 REL_OP          : "<" 
                 {
-                    printTokenInfo("LT",yylex);
+                    printRule("REL_OP","LT");
                 }
                 | ">" 
                 {
-                    printTokenInfo("GT",yylex);
+                    printRule("REL_OP","GT");
                 }
                 | "<=" 
                 {
-                    printTokenInfo("LE",yylex);
+                    printRule("REL_OP","LE");
                 }
                 | ">=" 
                 {
-                    printTokenInfo("GE",yylex);
+                    printRule("REL_OP","GE");
                 }
                 | "=" 
                 {
-                    printTokenInfo("EQ",yylex);
+                    printRule("REL_OP","EQ");
                 }
                 | "/=" 
                 {
-                    printTokenInfo("NE",yylex);
+                    printRule("REL_OP","NE");
                 }
                 ;
 
 UN_OP           : "not"
                 {
-                    printTokenInfo("NOT",yylex);
+                    printRule("UN_OP","NOT");
                 }
 
 
@@ -276,7 +276,7 @@ void printRule(const char *lhs, const char *rhs)
 
 int yyerror(const char *s) 
 {
-  printf("%s\n", s);
+  printf("Line %d: %s\n",numLines, s);
   return(1);
 }
 
@@ -285,7 +285,7 @@ void printTokenInfo(const char* tokenType, const char* lexeme)
   printf("TOKEN: %s  LEXEME: %s\n", tokenType, lexeme);
 }
 
-int main() 
+int main(void) 
 {
   do 
   {

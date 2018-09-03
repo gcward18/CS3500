@@ -11,18 +11,6 @@
 */
 
 %{
-/* 
-Definitions of constants, variables, & function prototypes go here 
-*/
-
-#define T_IDENT             1
-#define T_INTCONST          2
-#define T_STRING_CONSTANT   3
-#define T_UNKNOWN           4
-
-int numLines = 0;
-
-void printTokenInfo(const char* tokenType, char* lexeme);
 
 %}
 
@@ -45,132 +33,114 @@ INT             [0-9]*
 
 "lambda"        {
                 printTokenInfo("LAMBDA", yytext);
-                return T_IDENT;
+                return IDENT;
 } 
 "let*"          {
                 printTokenInfo("LETSTAR", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "("             {
                 printTokenInfo("LPAREN", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 ")"             {
                 printTokenInfo("RPAREN", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "input"         {
                 printTokenInfo("INPUT", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "print"         {
                 printTokenInfo("PRINT", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "if"            {
                 printTokenInfo("IF", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "+"             {
                 printTokenInfo("ADD", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "*"             {
                 printTokenInfo("MULT", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "/"             {
                 printTokenInfo("DIV", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "-"             {
                 printTokenInfo("SUB", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "and"           {
                 printTokenInfo("AND", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "or"            {
                 printTokenInfo("OR", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "not"           {
                 printTokenInfo("NOT", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "<"             {
                 printTokenInfo("LT", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 ">"             {
                 printTokenInfo("GT", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "<="            {
                 printTokenInfo("LE", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 ">="            {
                 printTokenInfo("GE", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "="             {
                 printTokenInfo("EQ", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "/="            {
                 printTokenInfo("NE", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "t"             {
                 printTokenInfo("T", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 "nil"           {
                 printTokenInfo("NIL", yytext);
-                return T_IDENT;
+                return IDENT;
 }
 {IDENT}         {
                 printTokenInfo("IDENT", yytext);
-                return T_STRING_CONSTANT;
+                return STRCONST;
 }
 {STRCONST}      {
                 printTokenInfo("STRCONST", yytext);
-                return T_STRING_CONSTANT;
+                return STRCONST;
 }
 {INTCONST}	    {
 				printTokenInfo("INTCONST", yytext);
-				return T_INTCONST;
+				return INTCONST;
 }
 {INT}           {
 				printTokenInfo("INTCONST", yytext);
-				return T_INTCONST;
+				return INTCONST;
 }
 {NEWLINE}		    { }
 {COMMENT}       { }
 {WSPACE}		    { }
 .			          {
 				printTokenInfo("UNKNOWN", yytext);
-				return T_UNKNOWN;
+				return UNKNOWN;
 }
 
 %%
-
-// User-written code goes here
-
-void printTokenInfo(const char* tokenType, char* lexeme) {
-  printf("TOKEN: %s  \tLEXEME: %s\n", tokenType, lexeme);
-}
-
-// You should supply a yywrap function.
-// Having it return 1 means only 1 input file will be scanned.
-int yywrap(void) { return 1; }
-
-int main(void) {
-  while ( yylex() ) ;  // Keep processing tokens until 0 returned
-  return 0;
-}
-
-
-
