@@ -37,8 +37,9 @@ extern "C"
 %}
 
 /* Token declarations */
-%token  IDENT INTCONST STRCONST UNKNOWN FOO 
-
+%token IDENT INTCONST STRCONST UNKNOWN FOO INPUT NIL
+%token MULT SUB DIV ADD AND OR LT GT LE GE EQ PRINT
+%token NE NOT LAMBDA LPAREN RPAREN LETSTAR IF T
 /* Starting point */
 %start		START
 
@@ -61,7 +62,7 @@ EXPR		: CONST
             {
                 printRule("EXPR","IDENT");
             }
-            | "(" PARENTHESIZED_EXPR ")"
+            | LPAREN PARENTHESIZED_EXPR RPAREN
             {
                 printRule("EXPR","LPAREN PARENTHESIZED_EXPR RPAREN");
             }
@@ -75,11 +76,11 @@ CONST       : INTCONST
             {
                 printRule("CONST","STRCONST");
             }
-            | "t"
+            | T
             {
                 printRule("CONST","t");
             }
-            | "nil" 
+            | NIL 
             {
                 printRule("CONST","nil");
             }
@@ -125,13 +126,13 @@ ARITHLOGIC_EXPR : UN_OP EXPR
                 }
                 ;
 
-IF_EXPR         : "if" EXPR EXPR EXPR
+IF_EXPR         : IF EXPR EXPR EXPR
                 {
                     printRule("IF_EXPR","IF EXPR EXPR EXPR");
                 }
                 ;
 
-LET_EXPR        : "let*" "(" ID_EXPR_LIST ")" EXPR
+LET_EXPR        : LETSTAR LPAREN ID_EXPR_LIST RPAREN EXPR
                 {
                     printRule("LET_EXPR","LETSTAR LPAREN ID_EXPR_LIST RPAREN EXPR");
                 }
@@ -141,13 +142,13 @@ ID_EXPR_LIST    : /*epsilon*/
                 {
                     printRule("ID_EXPR_LIST","EPSILON");
                 }
-                | ID_EXPR_LIST "(" IDENT EXPR ")"
+                | ID_EXPR_LIST LPAREN IDENT EXPR RPAREN
                 {
                     printRule("ID_EXPR_LIST","ID_EXPR_LIST LPAREN IDENT EXPR RPAREN");
                 }
                 ;
 
-LAMBDA_EXPR     : "lambda" "(" ID_LIST ")" EXPR
+LAMBDA_EXPR     : LAMBDA LPAREN ID_LIST RPAREN EXPR
                 {
                     printRule("LAMBDA_EXPR","LAMBDA LPAREN ID_LIST RPAREN EXPR");
                 }
@@ -163,13 +164,13 @@ ID_LIST         : /*epsilon*/
                 }
                 ;
 
-PRINT_EXPR      :   "print" EXPR 
+PRINT_EXPR      :   PRINT EXPR 
                 {
-                    printRule("PRINT_EXPR","PRINT RULE");
+                    printRule("PRINT_EXPR","PRINT EXPR");
                 }
                 ;
 
-INPUT_EXPR      :   "input"
+INPUT_EXPR      :   INPUT
                 {
                     printRule("INPUT_EXPR","INPUT");
                 }
@@ -199,65 +200,64 @@ BIN_OP          : ARITH_OP
                 }
                 ;
 
-ARITH_OP        : "*" 
+ARITH_OP        : MULT 
                 {
                     printRule("ARITH_OP","MULT");
                 }
-                | "-" 
+                | SUB 
                 {
                     printRule("ARITH_OP","SUB");
                 }
-                | "/"
+                | DIV
                 {
                     printRule("ARITH_OP","DIV");
                 }
-                | "+"
+                | ADD
                 {
                     printRule("ARITH_OP","ADD");
                 }
                 ;
 
-LOG_OP          : "and"
+LOG_OP          : AND
                 {
                     printRule("LOG_OP","AND");
                 }
-                | "or"
+                | OR
                 {
                     printRule("LOG_OP","OR");
                 }
                 ;
 
-REL_OP          : "<" 
+REL_OP          : LT 
                 {
                     printRule("REL_OP","LT");
                 }
-                | ">" 
+                | GT 
                 {
                     printRule("REL_OP","GT");
                 }
-                | "<=" 
+                | LE 
                 {
                     printRule("REL_OP","LE");
                 }
-                | ">=" 
+                | GE 
                 {
                     printRule("REL_OP","GE");
                 }
-                | "=" 
+                | EQ 
                 {
                     printRule("REL_OP","EQ");
                 }
-                | "/=" 
+                | NE 
                 {
                     printRule("REL_OP","NE");
                 }
                 ;
 
-UN_OP           : "not"
+UN_OP           : NOT
                 {
                     printRule("UN_OP","NOT");
                 }
-
 
 
 

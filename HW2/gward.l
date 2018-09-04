@@ -11,131 +11,183 @@
 */
 
 %{
-
+#define		ADD		    0001
+#define		SUB		    0002
+#define		MULT	    0003
+#define		DIV		    0004
+#define		AND		    0005
+#define		OR		    0006
+#define		NOT		    0007
+#define		LT		    0010
+#define		GT		    0011
+#define		LE		    0012
+#define		GE		    0013
+#define		EQ		    0014
+#define		NE		    0015
+#define		LPAREN	  0100
+#define		RPAREN	  0101
+#define		LETSTAR	  0200
+#define		IF		    0201
+#define		LAMBDA	  0202
+#define		PRINT	    0203
+#define		INPUT	    0204
+#define		T		      0205
+#define		NIL		    0206
+#define		IDENT	    0300
+#define		INTCONST	0301
+#define		STRCONST	0302
+#define		UNKNOWN	  0666
 %}
 
 /* Defintions of regular expressions go here */
 
-WSPACE		      [ \t\v\r]+
-NEWLINE         \n
-COMMENT         ;.*
 
-DIGIT	          [0-9]
-LETTER          [a-zA-Z]
+WSPACE		        [ \t\n\r]+
 
-IDENT			      [_a-zA-Z][a-zA-Z0-9_]* 
-INTCONST        [ +-]{DIGIT}+
-STRCONST        \".*\"
-INT             [0-9]*
+LO_ALPHA		      [a-z]
+HI_ALPHA		      [A-Z]
+ALPHA			        {LO_ALPHA}|{HI_ALPHA}
+DIGIT             [0-9]
+ALPHANUM		      {ALPHA}|{DIGIT}
+UNDERSCORE		    _
+
+IDENT			        ({UNDERSCORE}|{ALPHA})({ALPHANUM}|{UNDERSCORE})*
+
+NEG_INTCONST	    "-"[0-9]+
+POS_INTCONST	    ("+")?[0-9]+
+INTCONST          {NEG_INTCONST}|{POS_INTCONST}
+
+DOUBLE_QUOTE      \"
+STRCONST          {DOUBLE_QUOTE}[^\"\n]*{DOUBLE_QUOTE} 
+COMMENT           ";".*$      
+
+/* Identifiers */
+MULT            \*
+SUB             -
+DIV             \\
+ADD             \+
+AND             and
+OR              or
+LT              <
+GT              >
+LE              <=
+GE              >=
+EQ              =
+NE              \/=
+NOT             not
+LAMBDA          lambda
+LPAREN          \(
+RPAREN          \)
+LETSTAR         let\*
+IF              if
+NIL             nil
+T               t
+PRINT           print
+INPUT           input
 
 
 %%
 
-"lambda"        {
+{LAMBDA}        {
                 printTokenInfo("LAMBDA", yytext);
                 return IDENT;
 } 
-"let*"          {
+{LETSTAR}          {
                 printTokenInfo("LETSTAR", yytext);
                 return IDENT;
 }
-"("             {
+{LPAREN}             {
                 printTokenInfo("LPAREN", yytext);
                 return IDENT;
 }
-")"             {
+{RPAREN}             {
                 printTokenInfo("RPAREN", yytext);
                 return IDENT;
 }
-"input"         {
+{INPUT}         {
                 printTokenInfo("INPUT", yytext);
                 return IDENT;
 }
-"print"         {
+{PRINT}         {
                 printTokenInfo("PRINT", yytext);
                 return IDENT;
 }
-"if"            {
+{IF}            {
                 printTokenInfo("IF", yytext);
                 return IDENT;
 }
-"+"             {
+{ADD}             {
                 printTokenInfo("ADD", yytext);
                 return IDENT;
 }
-"*"             {
+{MULT}             {
                 printTokenInfo("MULT", yytext);
                 return IDENT;
 }
-"/"             {
+{DIV}             {
                 printTokenInfo("DIV", yytext);
                 return IDENT;
 }
-"-"             {
+{SUB}             {
                 printTokenInfo("SUB", yytext);
                 return IDENT;
 }
-"and"           {
+{AND}           {
                 printTokenInfo("AND", yytext);
                 return IDENT;
 }
-"or"            {
+{OR}            {
                 printTokenInfo("OR", yytext);
                 return IDENT;
 }
-"not"           {
+{NOT}           {
                 printTokenInfo("NOT", yytext);
                 return IDENT;
 }
-"<"             {
+{LT}             {
                 printTokenInfo("LT", yytext);
                 return IDENT;
 }
-">"             {
+{GT}             {
                 printTokenInfo("GT", yytext);
                 return IDENT;
 }
-"<="            {
+{LE}            {
                 printTokenInfo("LE", yytext);
                 return IDENT;
 }
-">="            {
+{GE}            {
                 printTokenInfo("GE", yytext);
                 return IDENT;
 }
-"="             {
+{EQ}             {
                 printTokenInfo("EQ", yytext);
                 return IDENT;
 }
-"/="            {
+{NE}            {
                 printTokenInfo("NE", yytext);
                 return IDENT;
 }
-"t"             {
+{T}             {
                 printTokenInfo("T", yytext);
                 return IDENT;
 }
-"nil"           {
+{NIL}           {
                 printTokenInfo("NIL", yytext);
                 return IDENT;
 }
-{IDENT}         {
-                printTokenInfo("IDENT", yytext);
-                return STRCONST;
-}
-{STRCONST}      {
-                printTokenInfo("STRCONST", yytext);
-                return STRCONST;
-}
-{INTCONST}	    {
-				printTokenInfo("INTCONST", yytext);
-				return INTCONST;
-}
-{INT}           {
-				printTokenInfo("INTCONST", yytext);
-				return INTCONST;
-}
-{NEWLINE}		    { }
+{INTCONST}	     {
+			printf("TOKEN: INTCONST  LEXEME: %s\n", yytext);
+			return INTCONST;
+			}
+{STRCONST}	     {
+			printf("TOKEN: STRCONST  LEXEME: %s\n", yytext);
+			return STRCONST;
+			}
+{IDENT}		{
+			printf("TOKEN: IDENT     LEXEME: %s\n", yytext);
+			return IDENT;
+			}
 {COMMENT}       { }
 {WSPACE}		    { }
 .			          {
