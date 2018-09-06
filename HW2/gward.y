@@ -37,16 +37,16 @@ extern "C"
 %}
 
 /* Token declarations */
-%token IDENT INTCONST STRCONST UNKNOWN FOO INPUT NIL
-%token MULT SUB DIV ADD AND OR LT GT LE GE EQ PRINT
-%token NE NOT LAMBDA LPAREN RPAREN LETSTAR IF T
+%token T_IDENT T_INTCONST T_STRCONST T_UNKNOWN T_FOO T_INPUT T_NIL
+%token T_MULT T_SUB T_DIV T_ADD T_AND T_OR T_LT T_GT T_LE T_GE T_EQ T_PRINT
+%token T_NE T_NOT T_LAMBDA T_LPAREN T_RPAREN T_LETSTAR T_IF T_T
 /* Starting point */
 %start		START
 
 /* Translation rules */
 %%
 
-START		: EXPR
+START		: N_EXPR
 			{
 			printRule("START", "EXPR");
 			printf("\n---- Completed parsing ----\n\n");
@@ -54,207 +54,207 @@ START		: EXPR
 			}
 			;
 
-EXPR		: CONST
+N_EXPR		: N_CONST
             {
                 printRule("EXPR","CONST");
             }
-            | IDENT
+            | T_IDENT
             {
                 printRule("EXPR","IDENT");
             }
-            | LPAREN PARENTHESIZED_EXPR RPAREN
+            | T_LPAREN N_PARENTHESIZED_EXPR T_RPAREN
             {
                 printRule("EXPR","LPAREN PARENTHESIZED_EXPR RPAREN");
             }
             ;
 
-CONST       : INTCONST
+N_CONST       : T_INTCONST
             {
                 printRule("CONST","INTCONST");
             }
-            | STRCONST 
+            | T_STRCONST 
             {
                 printRule("CONST","STRCONST");
             }
-            | T
+            | T_T
             {
                 printRule("CONST","t");
             }
-            | NIL 
+            | T_NIL 
             {
                 printRule("CONST","nil");
             }
             ;
 
-PARENTHESIZED_EXPR  : ARITHLOGIC_EXPR
+N_PARENTHESIZED_EXPR  : N_ARITHLOGIC_EXPR
                     {
                         printRule("PARENTHESIZED_EXPR","ARITHLOGIC_EXPR");
                     }
-                    | IF_EXPR
+                    | N_IF_EXPR
                     {
                         printRule("PARENTHESIZED_EXPR","IF_EXPR");
                     }
-                    | LET_EXPR 
+                    | N_LET_EXPR 
                     {
                         printRule("PARENTHESIZED_EXPR","LET_EXPR");
                     }
-                    | LAMBDA_EXPR
+                    | N_LAMBDA_EXPR
                     {
                         printRule("PARENTHESIZED_EXPR","LAMBDA_EXPR");
                     }
-                    | PRINT_EXPR
+                    | N_PRINT_EXPR
                     {
                         printRule("PARENTHESIZED_EXPR","PRINT_EXPR");
                     }
-                    | INPUT_EXPR 
+                    | N_INPUT_EXPR 
                     {
                         printRule("PARENTHESIZED_EXPR","INPUT_EXPR");
                     }
-                    | EXPR_LIST
+                    | N_EXPR_LIST
                     {
                         printRule("PARENTHESIZED_EXPR","EXPR_LIST");
                     }
                     ;
 
-ARITHLOGIC_EXPR : UN_OP EXPR
+N_ARITHLOGIC_EXPR : N_UN_OP N_EXPR
                 {
                     printRule("ARITHLOGIC_EXPR","UN_OP EXPR");
                 }
-                | BIN_OP EXPR EXPR 
+                | N_BIN_OP N_EXPR N_EXPR 
                 {
                     printRule("ARITHLOGIC_EXPR","BIN_OP EXPR EXPR");
                 }
                 ;
 
-IF_EXPR         : IF EXPR EXPR EXPR
+N_IF_EXPR         : T_IF N_EXPR N_EXPR N_EXPR
                 {
                     printRule("IF_EXPR","IF EXPR EXPR EXPR");
                 }
                 ;
 
-LET_EXPR        : LETSTAR LPAREN ID_EXPR_LIST RPAREN EXPR
+N_LET_EXPR        : T_LETSTAR T_LPAREN N_ID_EXPR_LIST T_RPAREN N_EXPR
                 {
                     printRule("LET_EXPR","LETSTAR LPAREN ID_EXPR_LIST RPAREN EXPR");
                 }
                 ;
 
-ID_EXPR_LIST    : /*epsilon*/
+N_ID_EXPR_LIST    : /*epsilon*/
                 {
                     printRule("ID_EXPR_LIST","EPSILON");
                 }
-                | ID_EXPR_LIST LPAREN IDENT EXPR RPAREN
+                | N_ID_EXPR_LIST T_LPAREN T_IDENT N_EXPR T_RPAREN
                 {
                     printRule("ID_EXPR_LIST","ID_EXPR_LIST LPAREN IDENT EXPR RPAREN");
                 }
                 ;
 
-LAMBDA_EXPR     : LAMBDA LPAREN ID_LIST RPAREN EXPR
+N_LAMBDA_EXPR     : T_LAMBDA T_LPAREN N_ID_LIST T_RPAREN N_EXPR
                 {
                     printRule("LAMBDA_EXPR","LAMBDA LPAREN ID_LIST RPAREN EXPR");
                 }
                 ;
 
-ID_LIST         : /*epsilon*/
+N_ID_LIST         : /*epsilon*/
                 {
                     printRule("ID_LIST","EPSILON");
                 }
-                | ID_LIST IDENT
+                | N_ID_LIST T_IDENT
                 {
                     printRule("ID_LIST","ID_LIST IDENT");
                 }
                 ;
 
-PRINT_EXPR      :   PRINT EXPR 
+N_PRINT_EXPR      :   T_PRINT N_EXPR 
                 {
                     printRule("PRINT_EXPR","PRINT EXPR");
                 }
                 ;
 
-INPUT_EXPR      :   INPUT
+N_INPUT_EXPR      :   T_INPUT
                 {
                     printRule("INPUT_EXPR","INPUT");
                 }
                 ;
 
-EXPR_LIST       : EXPR EXPR_LIST 
+N_EXPR_LIST       : N_EXPR N_EXPR_LIST 
                 {
                     printRule("EXPR_LIST","EXPR EXPR_LIST");
                 }
-                | EXPR 
+                | N_EXPR 
                 {
                     printRule("EXPR_LIST","EXPR");
                 }
                 ;
 
-BIN_OP          : ARITH_OP 
+N_BIN_OP          : N_ARITH_OP 
                 {
                     printRule("BIN_OP","ARITH_OP");
                 }
-                | LOG_OP
+                | N_LOG_OP
                 {
                     printRule("BIN_OP","LOG_OP");
                 }
-                | REL_OP
+                | N_REL_OP
                 {
                     printRule("BIN_OP","REL_OP");
                 }
                 ;
 
-ARITH_OP        : MULT 
+N_ARITH_OP        : T_MULT 
                 {
                     printRule("ARITH_OP","MULT");
                 }
-                | SUB 
+                | T_SUB 
                 {
                     printRule("ARITH_OP","SUB");
                 }
-                | DIV
+                | T_DIV
                 {
                     printRule("ARITH_OP","DIV");
                 }
-                | ADD
+                | T_ADD
                 {
                     printRule("ARITH_OP","ADD");
                 }
                 ;
 
-LOG_OP          : AND
+N_LOG_OP          : T_AND
                 {
                     printRule("LOG_OP","AND");
                 }
-                | OR
+                | T_OR
                 {
                     printRule("LOG_OP","OR");
                 }
                 ;
 
-REL_OP          : LT 
+N_REL_OP          : T_LT 
                 {
                     printRule("REL_OP","LT");
                 }
-                | GT 
+                | T_GT 
                 {
                     printRule("REL_OP","GT");
                 }
-                | LE 
+                | T_LE 
                 {
                     printRule("REL_OP","LE");
                 }
-                | GE 
+                | T_GE 
                 {
                     printRule("REL_OP","GE");
                 }
-                | EQ 
+                | T_EQ 
                 {
                     printRule("REL_OP","EQ");
                 }
-                | NE 
+                | T_NE 
                 {
                     printRule("REL_OP","NE");
                 }
                 ;
 
-UN_OP           : NOT
+N_UN_OP           : T_NOT
                 {
                     printRule("UN_OP","NOT");
                 }
@@ -277,7 +277,7 @@ void printRule(const char *lhs, const char *rhs)
 int yyerror(const char *s) 
 {
   printf("Line %d: %s\n",numLines, s);
-  return(1);
+  exit(1);
 }
 
 void printTokenInfo(const char* tokenType, const char* lexeme) 

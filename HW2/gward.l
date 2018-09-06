@@ -11,32 +11,32 @@
 */
 
 %{
-#define		ADD		    0001
-#define		SUB		    0002
-#define		MULT	    0003
-#define		DIV		    0004
-#define		AND		    0005
-#define		OR		    0006
-#define		NOT		    0007
-#define		LT		    0010
-#define		GT		    0011
-#define		LE		    0012
-#define		GE		    0013
-#define		EQ		    0014
-#define		NE		    0015
-#define		LPAREN	  0100
-#define		RPAREN	  0101
-#define		LETSTAR	  0200
-#define		IF		    0201
-#define		LAMBDA	  0202
-#define		PRINT	    0203
-#define		INPUT	    0204
-#define		T		      0205
-#define		NIL		    0206
-#define		IDENT	    0300
-#define		INTCONST	0301
-#define		STRCONST	0302
-#define		UNKNOWN	  0666
+// #define		T_ADD		    0001
+// #define		T_SUB		    0002
+// #define		T_MULT	    0003
+// #define		T_DIV		    0004
+// #define		T_AND		    0005
+// #define		T_OR		    0006
+// #define		T_NOT		    0007
+// #define		T_LT		    0010
+// #define		T_GT		    0011
+// #define		T_LE		    0012
+// #define		T_GE		    0013
+// #define		T_EQ		    0014
+// #define		T_NE		    0015
+// #define		T_LPAREN	    0100
+// #define		T_RPAREN	    0101
+// #define		T_LETSTAR	    0200
+// #define		T_IF		    0201
+// #define		T_LAMBDA	    0202
+// #define		T_PRINT	    0203
+// #define		T_INPUT	    0204
+// #define		T_T		    0205
+// #define		T_NIL		    0206
+// #define		T_IDENT	    0300
+// #define		T_INTCONST	    0301
+// #define		T_STRCONST	    0302
+// #define		T_UNKNOWN	    0666
 %}
 
 /* Defintions of regular expressions go here */
@@ -51,148 +51,148 @@ DIGIT             [0-9]
 ALPHANUM		      {ALPHA}|{DIGIT}
 UNDERSCORE		    _
 
-IDENT			        ({UNDERSCORE}|{ALPHA})({ALPHANUM}|{UNDERSCORE})*
+T_IDENT			        ({UNDERSCORE}|{ALPHA})({ALPHANUM}|{UNDERSCORE})*
 
 NEG_INTCONST	    "-"[0-9]+
 POS_INTCONST	    ("+")?[0-9]+
-INTCONST          {NEG_INTCONST}|{POS_INTCONST}
+T_INTCONST          {NEG_INTCONST}|{POS_INTCONST}
 
 DOUBLE_QUOTE      \"
-STRCONST          {DOUBLE_QUOTE}[^\"\n]*{DOUBLE_QUOTE} 
+T_STRCONST          {DOUBLE_QUOTE}[^\"\n]*{DOUBLE_QUOTE} 
 COMMENT           ";".*$      
 
 /* Identifiers */
-MULT            \*
-SUB             -
-DIV             \\
-ADD             \+
-AND             and
-OR              or
-LT              <
-GT              >
-LE              <=
-GE              >=
-EQ              =
-NE              \/=
-NOT             not
-LAMBDA          lambda
-LPAREN          \(
-RPAREN          \)
-LETSTAR         let\*
-IF              if
-NIL             nil
-T               t
-PRINT           print
-INPUT           input
+T_MULT            \*
+T_SUB             -
+T_DIV             \\
+T_ADD             \+
+T_AND             and
+T_OR              or
+T_LT              <
+T_GT              >
+T_LE              <=
+T_GE              >=
+T_EQ              =
+T_NE              \/=
+T_NOT             not
+T_LAMBDA          lambda
+T_LPAREN          \(
+T_RPAREN          \)
+T_LETSTAR         let\*
+T_IF              if
+T_NIL             nil
+T_T               t
+T_PRINT           print
+T_INPUT           input
 
 
 %%
 
-{LAMBDA}        {
+{T_LAMBDA}        {
                 printTokenInfo("LAMBDA", yytext);
-                return IDENT;
+                return T_LAMBDA;
 } 
-{LETSTAR}          {
+{T_LETSTAR}          {
                 printTokenInfo("LETSTAR", yytext);
-                return IDENT;
+                return T_LETSTAR;
 }
-{LPAREN}             {
+{T_LPAREN}             {
                 printTokenInfo("LPAREN", yytext);
-                return IDENT;
+                return T_LPAREN;
 }
-{RPAREN}             {
+{T_RPAREN}             {
                 printTokenInfo("RPAREN", yytext);
-                return IDENT;
+                return T_RPAREN;
 }
-{INPUT}         {
+{T_INPUT}         {
                 printTokenInfo("INPUT", yytext);
-                return IDENT;
+                return T_INPUT;
 }
-{PRINT}         {
+{T_PRINT}         {
                 printTokenInfo("PRINT", yytext);
-                return IDENT;
+                return T_PRINT;
 }
-{IF}            {
+{T_IF}            {
                 printTokenInfo("IF", yytext);
-                return IDENT;
+                return T_IF;
 }
-{ADD}             {
+{T_ADD}             {
                 printTokenInfo("ADD", yytext);
-                return IDENT;
+                return T_ADD;
 }
-{MULT}             {
+{T_MULT}             {
                 printTokenInfo("MULT", yytext);
-                return IDENT;
+                return T_MULT;
 }
-{DIV}             {
+{T_DIV}             {
                 printTokenInfo("DIV", yytext);
-                return IDENT;
+                return T_DIV;
 }
-{SUB}             {
+{T_SUB}             {
                 printTokenInfo("SUB", yytext);
-                return IDENT;
+                return T_IDENT;
 }
-{AND}           {
+{T_AND}           {
                 printTokenInfo("AND", yytext);
-                return IDENT;
+                return T_AND;
 }
-{OR}            {
+{T_OR}            {
                 printTokenInfo("OR", yytext);
-                return IDENT;
+                return T_OR;
 }
-{NOT}           {
+{T_NOT}           {
                 printTokenInfo("NOT", yytext);
-                return IDENT;
+                return T_NOT;
 }
-{LT}             {
+{T_LT}             {
                 printTokenInfo("LT", yytext);
-                return IDENT;
+                return T_LT;
 }
-{GT}             {
+{T_GT}             {
                 printTokenInfo("GT", yytext);
-                return IDENT;
+                return T_GT;
 }
-{LE}            {
+{T_LE}            {
                 printTokenInfo("LE", yytext);
-                return IDENT;
+                return T_LE;
 }
-{GE}            {
+{T_GE}            {
                 printTokenInfo("GE", yytext);
-                return IDENT;
+                return T_GE;
 }
-{EQ}             {
+{T_EQ}             {
                 printTokenInfo("EQ", yytext);
-                return IDENT;
+                return T_EQ;
 }
-{NE}            {
+{T_NE}            {
                 printTokenInfo("NE", yytext);
-                return IDENT;
+                return T_NE;
 }
-{T}             {
+{T_T}             {
                 printTokenInfo("T", yytext);
-                return IDENT;
+                return T_T;
 }
-{NIL}           {
+{T_NIL}           {
                 printTokenInfo("NIL", yytext);
-                return IDENT;
+                return T_NIL;
 }
-{INTCONST}	     {
+{T_INTCONST}	     {
 			printf("TOKEN: INTCONST  LEXEME: %s\n", yytext);
-			return INTCONST;
+			return T_INTCONST;
 			}
-{STRCONST}	     {
+{T_STRCONST}	     {
 			printf("TOKEN: STRCONST  LEXEME: %s\n", yytext);
-			return STRCONST;
+			return T_STRCONST;
 			}
-{IDENT}		{
+{T_IDENT}		{
 			printf("TOKEN: IDENT     LEXEME: %s\n", yytext);
-			return IDENT;
+			return T_IDENT;
 			}
 {COMMENT}       { }
 {WSPACE}		    { }
 .			          {
 				printTokenInfo("UNKNOWN", yytext);
-				return UNKNOWN;
+				return T_UNKNOWN;
 }
 
 %%

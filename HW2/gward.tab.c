@@ -112,33 +112,33 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    IDENT = 258,
-    INTCONST = 259,
-    STRCONST = 260,
-    UNKNOWN = 261,
-    FOO = 262,
-    INPUT = 263,
-    NIL = 264,
-    MULT = 265,
-    SUB = 266,
-    DIV = 267,
-    ADD = 268,
-    AND = 269,
-    OR = 270,
-    LT = 271,
-    GT = 272,
-    LE = 273,
-    GE = 274,
-    EQ = 275,
-    PRINT = 276,
-    NE = 277,
-    NOT = 278,
-    LAMBDA = 279,
-    LPAREN = 280,
-    RPAREN = 281,
-    LETSTAR = 282,
-    IF = 283,
-    T = 284
+    T_IDENT = 258,
+    T_INTCONST = 259,
+    T_STRCONST = 260,
+    T_UNKNOWN = 261,
+    T_FOO = 262,
+    T_INPUT = 263,
+    T_NIL = 264,
+    T_MULT = 265,
+    T_SUB = 266,
+    T_DIV = 267,
+    T_ADD = 268,
+    T_AND = 269,
+    T_OR = 270,
+    T_LT = 271,
+    T_GT = 272,
+    T_LE = 273,
+    T_GE = 274,
+    T_EQ = 275,
+    T_PRINT = 276,
+    T_NE = 277,
+    T_NOT = 278,
+    T_LAMBDA = 279,
+    T_LPAREN = 280,
+    T_RPAREN = 281,
+    T_LETSTAR = 282,
+    T_IF = 283,
+    T_T = 284
   };
 #endif
 
@@ -471,13 +471,15 @@ static const yytype_uint16 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "IDENT", "INTCONST", "STRCONST",
-  "UNKNOWN", "FOO", "INPUT", "NIL", "MULT", "SUB", "DIV", "ADD", "AND",
-  "OR", "LT", "GT", "LE", "GE", "EQ", "PRINT", "NE", "NOT", "LAMBDA",
-  "LPAREN", "RPAREN", "LETSTAR", "IF", "T", "$accept", "START", "EXPR",
-  "CONST", "PARENTHESIZED_EXPR", "ARITHLOGIC_EXPR", "IF_EXPR", "LET_EXPR",
-  "ID_EXPR_LIST", "LAMBDA_EXPR", "ID_LIST", "PRINT_EXPR", "INPUT_EXPR",
-  "EXPR_LIST", "BIN_OP", "ARITH_OP", "LOG_OP", "REL_OP", "UN_OP", YY_NULLPTR
+  "$end", "error", "$undefined", "T_IDENT", "T_INTCONST", "T_STRCONST",
+  "T_UNKNOWN", "T_FOO", "T_INPUT", "T_NIL", "T_MULT", "T_SUB", "T_DIV",
+  "T_ADD", "T_AND", "T_OR", "T_LT", "T_GT", "T_LE", "T_GE", "T_EQ",
+  "T_PRINT", "T_NE", "T_NOT", "T_LAMBDA", "T_LPAREN", "T_RPAREN",
+  "T_LETSTAR", "T_IF", "T_T", "$accept", "START", "N_EXPR", "N_CONST",
+  "N_PARENTHESIZED_EXPR", "N_ARITHLOGIC_EXPR", "N_IF_EXPR", "N_LET_EXPR",
+  "N_ID_EXPR_LIST", "N_LAMBDA_EXPR", "N_ID_LIST", "N_PRINT_EXPR",
+  "N_INPUT_EXPR", "N_EXPR_LIST", "N_BIN_OP", "N_ARITH_OP", "N_LOG_OP",
+  "N_REL_OP", "N_UN_OP", YY_NULLPTR
 };
 #endif
 
@@ -1285,7 +1287,7 @@ yyreduce:
 			printf("\n---- Completed parsing ----\n\n");
 			return 0;
 			}
-#line 1289 "gward.tab.c" /* yacc.c:1646  */
+#line 1291 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
@@ -1293,7 +1295,7 @@ yyreduce:
     {
                 printRule("EXPR","CONST");
             }
-#line 1297 "gward.tab.c" /* yacc.c:1646  */
+#line 1299 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
@@ -1301,7 +1303,7 @@ yyreduce:
     {
                 printRule("EXPR","IDENT");
             }
-#line 1305 "gward.tab.c" /* yacc.c:1646  */
+#line 1307 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
@@ -1309,7 +1311,7 @@ yyreduce:
     {
                 printRule("EXPR","LPAREN PARENTHESIZED_EXPR RPAREN");
             }
-#line 1313 "gward.tab.c" /* yacc.c:1646  */
+#line 1315 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
@@ -1317,7 +1319,7 @@ yyreduce:
     {
                 printRule("CONST","INTCONST");
             }
-#line 1321 "gward.tab.c" /* yacc.c:1646  */
+#line 1323 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
@@ -1325,7 +1327,7 @@ yyreduce:
     {
                 printRule("CONST","STRCONST");
             }
-#line 1329 "gward.tab.c" /* yacc.c:1646  */
+#line 1331 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
@@ -1333,7 +1335,7 @@ yyreduce:
     {
                 printRule("CONST","t");
             }
-#line 1337 "gward.tab.c" /* yacc.c:1646  */
+#line 1339 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
@@ -1341,7 +1343,7 @@ yyreduce:
     {
                 printRule("CONST","nil");
             }
-#line 1345 "gward.tab.c" /* yacc.c:1646  */
+#line 1347 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
@@ -1349,7 +1351,7 @@ yyreduce:
     {
                         printRule("PARENTHESIZED_EXPR","ARITHLOGIC_EXPR");
                     }
-#line 1353 "gward.tab.c" /* yacc.c:1646  */
+#line 1355 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
@@ -1357,7 +1359,7 @@ yyreduce:
     {
                         printRule("PARENTHESIZED_EXPR","IF_EXPR");
                     }
-#line 1361 "gward.tab.c" /* yacc.c:1646  */
+#line 1363 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
@@ -1365,7 +1367,7 @@ yyreduce:
     {
                         printRule("PARENTHESIZED_EXPR","LET_EXPR");
                     }
-#line 1369 "gward.tab.c" /* yacc.c:1646  */
+#line 1371 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
@@ -1373,7 +1375,7 @@ yyreduce:
     {
                         printRule("PARENTHESIZED_EXPR","LAMBDA_EXPR");
                     }
-#line 1377 "gward.tab.c" /* yacc.c:1646  */
+#line 1379 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
@@ -1381,7 +1383,7 @@ yyreduce:
     {
                         printRule("PARENTHESIZED_EXPR","PRINT_EXPR");
                     }
-#line 1385 "gward.tab.c" /* yacc.c:1646  */
+#line 1387 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
@@ -1389,7 +1391,7 @@ yyreduce:
     {
                         printRule("PARENTHESIZED_EXPR","INPUT_EXPR");
                     }
-#line 1393 "gward.tab.c" /* yacc.c:1646  */
+#line 1395 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
@@ -1397,7 +1399,7 @@ yyreduce:
     {
                         printRule("PARENTHESIZED_EXPR","EXPR_LIST");
                     }
-#line 1401 "gward.tab.c" /* yacc.c:1646  */
+#line 1403 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
@@ -1405,7 +1407,7 @@ yyreduce:
     {
                     printRule("ARITHLOGIC_EXPR","UN_OP EXPR");
                 }
-#line 1409 "gward.tab.c" /* yacc.c:1646  */
+#line 1411 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
@@ -1413,7 +1415,7 @@ yyreduce:
     {
                     printRule("ARITHLOGIC_EXPR","BIN_OP EXPR EXPR");
                 }
-#line 1417 "gward.tab.c" /* yacc.c:1646  */
+#line 1419 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
@@ -1421,7 +1423,7 @@ yyreduce:
     {
                     printRule("IF_EXPR","IF EXPR EXPR EXPR");
                 }
-#line 1425 "gward.tab.c" /* yacc.c:1646  */
+#line 1427 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
@@ -1429,7 +1431,7 @@ yyreduce:
     {
                     printRule("LET_EXPR","LETSTAR LPAREN ID_EXPR_LIST RPAREN EXPR");
                 }
-#line 1433 "gward.tab.c" /* yacc.c:1646  */
+#line 1435 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
@@ -1437,7 +1439,7 @@ yyreduce:
     {
                     printRule("ID_EXPR_LIST","EPSILON");
                 }
-#line 1441 "gward.tab.c" /* yacc.c:1646  */
+#line 1443 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
@@ -1445,7 +1447,7 @@ yyreduce:
     {
                     printRule("ID_EXPR_LIST","ID_EXPR_LIST LPAREN IDENT EXPR RPAREN");
                 }
-#line 1449 "gward.tab.c" /* yacc.c:1646  */
+#line 1451 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
@@ -1453,7 +1455,7 @@ yyreduce:
     {
                     printRule("LAMBDA_EXPR","LAMBDA LPAREN ID_LIST RPAREN EXPR");
                 }
-#line 1457 "gward.tab.c" /* yacc.c:1646  */
+#line 1459 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
@@ -1461,7 +1463,7 @@ yyreduce:
     {
                     printRule("ID_LIST","EPSILON");
                 }
-#line 1465 "gward.tab.c" /* yacc.c:1646  */
+#line 1467 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
@@ -1469,7 +1471,7 @@ yyreduce:
     {
                     printRule("ID_LIST","ID_LIST IDENT");
                 }
-#line 1473 "gward.tab.c" /* yacc.c:1646  */
+#line 1475 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
@@ -1477,7 +1479,7 @@ yyreduce:
     {
                     printRule("PRINT_EXPR","PRINT EXPR");
                 }
-#line 1481 "gward.tab.c" /* yacc.c:1646  */
+#line 1483 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
@@ -1485,7 +1487,7 @@ yyreduce:
     {
                     printRule("INPUT_EXPR","INPUT");
                 }
-#line 1489 "gward.tab.c" /* yacc.c:1646  */
+#line 1491 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
@@ -1493,7 +1495,7 @@ yyreduce:
     {
                     printRule("EXPR_LIST","EXPR EXPR_LIST");
                 }
-#line 1497 "gward.tab.c" /* yacc.c:1646  */
+#line 1499 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
@@ -1501,7 +1503,7 @@ yyreduce:
     {
                     printRule("EXPR_LIST","EXPR");
                 }
-#line 1505 "gward.tab.c" /* yacc.c:1646  */
+#line 1507 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
@@ -1509,7 +1511,7 @@ yyreduce:
     {
                     printRule("BIN_OP","ARITH_OP");
                 }
-#line 1513 "gward.tab.c" /* yacc.c:1646  */
+#line 1515 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
@@ -1517,7 +1519,7 @@ yyreduce:
     {
                     printRule("BIN_OP","LOG_OP");
                 }
-#line 1521 "gward.tab.c" /* yacc.c:1646  */
+#line 1523 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
@@ -1525,7 +1527,7 @@ yyreduce:
     {
                     printRule("BIN_OP","REL_OP");
                 }
-#line 1529 "gward.tab.c" /* yacc.c:1646  */
+#line 1531 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
@@ -1533,7 +1535,7 @@ yyreduce:
     {
                     printRule("ARITH_OP","MULT");
                 }
-#line 1537 "gward.tab.c" /* yacc.c:1646  */
+#line 1539 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
@@ -1541,7 +1543,7 @@ yyreduce:
     {
                     printRule("ARITH_OP","SUB");
                 }
-#line 1545 "gward.tab.c" /* yacc.c:1646  */
+#line 1547 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
@@ -1549,7 +1551,7 @@ yyreduce:
     {
                     printRule("ARITH_OP","DIV");
                 }
-#line 1553 "gward.tab.c" /* yacc.c:1646  */
+#line 1555 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
@@ -1557,7 +1559,7 @@ yyreduce:
     {
                     printRule("ARITH_OP","ADD");
                 }
-#line 1561 "gward.tab.c" /* yacc.c:1646  */
+#line 1563 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
@@ -1565,7 +1567,7 @@ yyreduce:
     {
                     printRule("LOG_OP","AND");
                 }
-#line 1569 "gward.tab.c" /* yacc.c:1646  */
+#line 1571 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
@@ -1573,7 +1575,7 @@ yyreduce:
     {
                     printRule("LOG_OP","OR");
                 }
-#line 1577 "gward.tab.c" /* yacc.c:1646  */
+#line 1579 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
@@ -1581,7 +1583,7 @@ yyreduce:
     {
                     printRule("REL_OP","LT");
                 }
-#line 1585 "gward.tab.c" /* yacc.c:1646  */
+#line 1587 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
@@ -1589,7 +1591,7 @@ yyreduce:
     {
                     printRule("REL_OP","GT");
                 }
-#line 1593 "gward.tab.c" /* yacc.c:1646  */
+#line 1595 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
@@ -1597,7 +1599,7 @@ yyreduce:
     {
                     printRule("REL_OP","LE");
                 }
-#line 1601 "gward.tab.c" /* yacc.c:1646  */
+#line 1603 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
@@ -1605,7 +1607,7 @@ yyreduce:
     {
                     printRule("REL_OP","GE");
                 }
-#line 1609 "gward.tab.c" /* yacc.c:1646  */
+#line 1611 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
@@ -1613,7 +1615,7 @@ yyreduce:
     {
                     printRule("REL_OP","EQ");
                 }
-#line 1617 "gward.tab.c" /* yacc.c:1646  */
+#line 1619 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
@@ -1621,7 +1623,7 @@ yyreduce:
     {
                     printRule("REL_OP","NE");
                 }
-#line 1625 "gward.tab.c" /* yacc.c:1646  */
+#line 1627 "gward.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
@@ -1629,11 +1631,11 @@ yyreduce:
     {
                     printRule("UN_OP","NOT");
                 }
-#line 1633 "gward.tab.c" /* yacc.c:1646  */
+#line 1635 "gward.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1637 "gward.tab.c" /* yacc.c:1646  */
+#line 1639 "gward.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1876,7 +1878,7 @@ void printRule(const char *lhs, const char *rhs)
 int yyerror(const char *s) 
 {
   printf("Line %d: %s\n",numLines, s);
-  return(1);
+  exit(1);
 }
 
 void printTokenInfo(const char* tokenType, const char* lexeme) 
