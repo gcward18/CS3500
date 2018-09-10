@@ -130,7 +130,7 @@ T_INPUT           input
 }
 {T_SUB}             {
                 printTokenInfo("SUB", yytext);
-                return T_IDENT;
+                return T_SUB;
 }
 {T_AND}           {
                 printTokenInfo("AND", yytext);

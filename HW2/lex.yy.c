@@ -884,7 +884,7 @@ YY_RULE_SETUP
 #line 131 "gward.l"
 {
                 printTokenInfo("SUB", yytext);
-                return T_IDENT;
+                return T_SUB;
 }
 	YY_BREAK
 case 12:
