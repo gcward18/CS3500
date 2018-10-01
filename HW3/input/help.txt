@@ -1,0 +1,13 @@
+true ---
+           \   
+            \
+            ------ scopeStack.top().addEntry( SYMBOL_TABLE_ENTRY($1, UNDEFINED) )
+            /         {Symbol Table}                  ^
+           /                                 ( T_IDENT, UNDEFINED   )
+False --        
+ 
+string( char * )
+
+places to where this will go:
+    1. T_IDENT in ID_EXPR_LIST and ID_LIST 
+    2. 

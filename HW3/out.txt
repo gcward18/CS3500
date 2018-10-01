@@ -1,0 +1,16 @@
+TOKEN: LPAREN    LEXEME: (
+TOKEN: LETSTAR   LEXEME: let*
+
+___Entering new scope...
+
+TOKEN: LPAREN    LEXEME: (
+ID_EXPR_LIST -> EPSILON
+TOKEN: LPAREN    LEXEME: (
+TOKEN: IDENT     LEXEME: x
+TOKEN: INTCONST  LEXEME: 5
+CONST -> INTCONST
+EXPR -> CONST
+TOKEN: RPAREN    LEXEME: )
+ID_EXPR_LIST -> ID_EXPR_LIST ( IDENT EXPR )
+___Adding x to symbol table
+Line 1: Multply defined identifier
