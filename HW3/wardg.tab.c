@@ -1348,7 +1348,7 @@ yyreduce:
     {       
                 printRule("EXPR","IDENT");
                 if(!findEntryInAnyScope((yyvsp[0].text)))
-                    yyerror("");
+                    yyerror("Undefined identifier");
                 
             }
 #line 1355 "wardg.tab.c" /* yacc.c:1646  */
@@ -1499,7 +1499,7 @@ yyreduce:
 
                     if(!scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY((yyvsp[-2].text),UNDEFINED)))
                     {
-                        yyerror((yyvsp[-2].text));
+                        yyerror("Multiply defined identifier");
                     }
                 }
 #line 1506 "wardg.tab.c" /* yacc.c:1646  */
@@ -1935,7 +1935,7 @@ void printRule(const char *lhs, const char *rhs)
 
 int yyerror(const char *s) 
 {
-  printf("Line %d: Multply defined identifier\n",numLines);
+  printf("Line %d: %s\n",numLines, s);
   exit(1);
 }
 

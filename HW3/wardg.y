@@ -98,7 +98,7 @@ N_EXPR		: N_CONST
             {       
                 printRule("EXPR","IDENT");
                 if(!findEntryInAnyScope($1))
-                    yyerror("");
+                    yyerror("Undefined identifier");
                 
             }
             | T_LPAREN N_PARENTHESIZED_EXPR T_RPAREN
@@ -189,7 +189,7 @@ N_ID_EXPR_LIST    : /*epsilon*/
 
                     if(!scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY($3,UNDEFINED)))
                     {
-                        yyerror($3);
+                        yyerror("Multiply defined identifier");
                     }
                 }
                 ;
@@ -325,7 +325,7 @@ void printRule(const char *lhs, const char *rhs)
 
 int yyerror(const char *s) 
 {
-  printf("Line %d: Multply defined identifier\n",numLines);
+  printf("Line %d: %s\n",numLines, s);
   exit(1);
 }
 

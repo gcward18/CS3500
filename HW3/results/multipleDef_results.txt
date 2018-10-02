@@ -29,4 +29,4 @@ EXPR -> CONST
 TOKEN: RPAREN    LEXEME: )
 ID_EXPR_LIST -> ID_EXPR_LIST ( IDENT EXPR )
 ___Adding x to symbol table
-Line 3: Multply defined identifier
+Line 3: Multiply defined identifier
