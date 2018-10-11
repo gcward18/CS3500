@@ -28,10 +28,4 @@ LAMBDA_EXPR -> lambda ( ID_LIST ) EXPR
 
 ___Exiting scope...
 
-PARENTHESIZED_EXPR -> LAMBDA_EXPR
-TOKEN: RPAREN    LEXEME: )
-EXPR -> ( PARENTHESIZED_EXPR )
-START -> EXPR
-
----- Completed parsing ----
-
+Line 1: Arg 2 cannot be function

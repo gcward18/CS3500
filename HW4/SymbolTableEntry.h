@@ -22,12 +22,12 @@ public:
   // Constructors
   SYMBOL_TABLE_ENTRY( ) { name = ""; type.type = UNDEFINED; }
 
-  SYMBOL_TABLE_ENTRY(const string theName, const TYPE_INFO theType) 
+  SYMBOL_TABLE_ENTRY(const string theName, const int tType, const int numPar, const int returnType) 
   {
     name            = theName;
-    type.type       = theType.type;
-    type.numParams  = type.numParams;
-    type.returnType = type.returnType;
+    type.type       = tType;
+    type.numParams  = numPar;
+    type.returnType = returnType;
   }
 
   SYMBOL_TABLE_ENTRY(const string theName, const int theType) 
@@ -38,11 +38,11 @@ public:
     type.returnType = UNDEFINED;
   }
   // Accessors
-  string getName() const { return name; }
-  TYPE_INFO getTypeCode() const { return type; }
-  int getTypeType() const { return type.type; }
-  int getNumParams() const { return type.numParams; }
-  int getReturnType() const { return type.returnType; }
+  string    getName() const       { return name; }
+  TYPE_INFO getTypeCode() const   { return type; }
+  int       getType() const       { return type.type; }
+  int       getNumParams() const  { return type.numParams; }
+  int       getReturnType() const { return type.returnType; }
 };
 
 #endif  // SYMBOL_TABLE_ENTRY_H

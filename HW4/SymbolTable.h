@@ -40,6 +40,13 @@ public:
     else return(true);
   }
 
+    // If a SYMBOL_TABLE_ENTRY with name theName is
+  // found in this symbol table, then return the entry
+  int getType(string theName) 
+  {
+    return hashTable[theName].getType();
+  }
+
 };
 
 #endif  // SYMBOL_TABLE_H

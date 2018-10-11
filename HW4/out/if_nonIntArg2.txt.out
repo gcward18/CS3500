@@ -12,10 +12,7 @@ CONST -> INTCONST
 EXPR -> CONST
 TOKEN: RPAREN    LEXEME: )
 ID_EXPR_LIST -> ID_EXPR_LIST ( IDENT EXPR )
-___Adding x to symbol table 1
-
-
-
+___Adding x to symbol table
 TOKEN: LPAREN    LEXEME: (
 TOKEN: IDENT     LEXEME: y
 TOKEN: INTCONST  LEXEME: 5
@@ -23,10 +20,7 @@ CONST -> INTCONST
 EXPR -> CONST
 TOKEN: RPAREN    LEXEME: )
 ID_EXPR_LIST -> ID_EXPR_LIST ( IDENT EXPR )
-___Adding y to symbol table 1
-
-
-
+___Adding y to symbol table
 TOKEN: LPAREN    LEXEME: (
 TOKEN: IDENT     LEXEME: z
 TOKEN: LPAREN    LEXEME: (
@@ -55,10 +49,7 @@ TOKEN: RPAREN    LEXEME: )
 EXPR -> ( PARENTHESIZED_EXPR )
 TOKEN: RPAREN    LEXEME: )
 ID_EXPR_LIST -> ID_EXPR_LIST ( IDENT EXPR )
-___Adding z to symbol table 0
-
-
-
+___Adding z to symbol table
 TOKEN: RPAREN    LEXEME: )
 TOKEN: LPAREN    LEXEME: (
 TOKEN: IF        LEXEME: if
@@ -69,17 +60,4 @@ EXPR -> IDENT
 TOKEN: IDENT     LEXEME: y
 EXPR -> IDENT
 IF_EXPR -> if EXPR EXPR EXPR
-PARENTHESIZED_EXPR -> IF_EXPR
-TOKEN: RPAREN    LEXEME: )
-EXPR -> ( PARENTHESIZED_EXPR )
-LET_EXPR -> let* ( ID_EXPR_LIST ) EXPR
-
-___Exiting scope...
-
-PARENTHESIZED_EXPR -> LET_EXPR
-TOKEN: RPAREN    LEXEME: )
-EXPR -> ( PARENTHESIZED_EXPR )
-START -> EXPR
-
----- Completed parsing ----
-
+Line 7: Arg 2 cannot be function

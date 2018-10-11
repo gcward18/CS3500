@@ -9,10 +9,4 @@ TOKEN: NIL       LEXEME: nil
 CONST -> nil
 EXPR -> CONST
 ARITHLOGIC_EXPR -> BIN_OP EXPR EXPR
-PARENTHESIZED_EXPR -> ARITHLOGIC_EXPR
-TOKEN: RPAREN    LEXEME: )
-EXPR -> ( PARENTHESIZED_EXPR )
-START -> EXPR
-
----- Completed parsing ----
-
+Line 1: Arg 1 must be integer

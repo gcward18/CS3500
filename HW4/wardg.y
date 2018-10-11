@@ -102,8 +102,8 @@ bool findEntryInAnyScope(const string theName)
 
 /* Associate identfiers name with identifiers token */
 %type <text> T_IDENT
-%type <typeInfo> N_CONST N_EXPR N_PARENTHESIZED_EXPR N_IF_EXPR N_ARITHLOGIC_EXPR 
-%type <typeInfo> N_LAMBDA_EXPR N_LET_EXPR N_PRINT_EXPR N_EXPR_LIST N_INPUT_EXPR
+%type <typeInfo> N_CONST N_EXPR N_PARENTHESIZED_EXPR N_IF_EXPR N_ARITHLOGIC_EXPR N_ID_EXPR_LIST
+%type <typeInfo> N_LAMBDA_EXPR N_LET_EXPR N_PRINT_EXPR N_EXPR_LIST N_INPUT_EXPR N_ID_LIST
 %type <num>	N_BIN_OP
 /* Translation rules */
 %%
@@ -128,6 +128,11 @@ N_EXPR		: N_CONST
 						yyerror("Undefined identifier");
 						return(0);
 				}
+
+				$$.type 		=	scopeStack.top().getType($1);
+				// printf("---- TYPE %d ------", scopeStack.top().getType($1));
+				$$.numParams	=	1;
+				$$.returnType	= 	NOT_APPLICABLE;
 			}
 			| T_LPAREN N_PARENTHESIZED_EXPR T_RPAREN
 			{
@@ -171,59 +176,57 @@ N_PARENTHESIZED_EXPR	: N_ARITHLOGIC_EXPR
 					printRule("PARENTHESIZED_EXPR",
 									"ARITHLOGIC_EXPR");
 					$$.type 		= $1.type;
-					$$.numParams 	= NOT_APPLICABLE;
-					$$.returnType 	= NOT_APPLICABLE;
+					$$.numParams 	= $1.numParams;
+					$$.returnType 	= $1.returnType;
 				}
                 | N_IF_EXPR 
 				{
 					printRule("PARENTHESIZED_EXPR", "IF_EXPR");
-					if($1.type == FUNCTION){
-						yyerror("Arg 1 cannot be a function");
-					}
-					$$.type 		= $1.type;
-					$$.numParams 	= NOT_APPLICABLE;
-					$$.returnType 	= NOT_APPLICABLE;
+
+					$$.type 			= $1.type;
+					$$.numParams 	= $1.numParams;
+					$$.returnType 	= $1.returnType;
 
 				}
                 | N_LET_EXPR 
 				{
 					printRule("PARENTHESIZED_EXPR", 
 									"LET_EXPR");
-					$$.type 		= FUNCTION;
-					// $$.numParams 	= NOT_APPLICABLE;
-					// $$.returnType 	= NOT_APPLICABLE;
+					$$.type 		= $1.type;
+					$$.numParams 	= $1.numParams;
+					$$.returnType 	= $1.returnType;
 				}
             	| N_LAMBDA_EXPR 
 				{
 					printRule("PARENTHESIZED_EXPR", 
 							"LAMBDA_EXPR");
-					$$.type 		= FUNCTION;
-					// $$.numParams 	= NOT_APPLICABLE;
-					// $$.returnType 	= NOT_APPLICABLE;
+					$$.type 		= $1.type;
+					$$.numParams 	= $1.numParams;
+					$$.returnType 	= $1.returnType;
 				}
                 | N_PRINT_EXPR 
 				{
 					printRule("PARENTHESIZED_EXPR", 
 							"PRINT_EXPR");
 					$$.type 		= $1.type;
-					$$.numParams 	= NOT_APPLICABLE;
-					$$.returnType 	= NOT_APPLICABLE;
+					$$.numParams 	= $1.numParams;
+					$$.returnType 	= $1.returnType;
 				}
                 | N_INPUT_EXPR 
 				{
 					printRule("PARENTHESIZED_EXPR",
 							"INPUT_EXPR");
 					$$.type 		= $1.type;
-					$$.numParams 	= NOT_APPLICABLE;
-					$$.returnType 	= NOT_APPLICABLE;
+					$$.numParams 	= $1.numParams;
+					$$.returnType 	= $1.returnType;
 				}
                 | N_EXPR_LIST 
 				{
 					printRule("PARENTHESIZED_EXPR",
 							"EXPR_LIST");
 					$$.type 		= $1.type;
-					$$.numParams 	= NOT_APPLICABLE;
-					$$.returnType 	= NOT_APPLICABLE;
+					$$.numParams 	= $1.numParams;
+					$$.returnType 	= $1.returnType;
 				}
 				;
 N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
@@ -249,18 +252,24 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 							$$.returnType 	= INT;
 						}
 						else if ($2.type != INT){
+							// printf("------ TYPE 1 = %d \n--------TYPE2 = %d \n\n", $2.type,$3.type);
 							yyerror("Arg 1 must be integer");
 							return(1);
 						}
-						yyerror("Arg 2 must be integer");
-						return(1);
+						else if ($3.type != INT){
+							// printf("------ TYPE 1 = %d \n--------TYPE2 = %d \n\n", $2.type,$3.type);
+							yyerror("Arg 2 must be integer");
+							return(1);
+						}
+						
+						
 					}
 					else if($1 == RELATIONAL_OP){
 						if(($2.type == FUNCTION) || ($2.type != INT && $2.type != STR)){
 							yyerror("Arg 1 must be integer or string");
 							return(1);
 						}
-						if(($2.type == FUNCTION) || ($3.type != INT && $3.type != STR)){
+						if(($3.type == FUNCTION) || ($3.type != INT && $3.type != STR)){
 							yyerror("Arg 2 must be integer or string");
 							return(1);
 						}
@@ -294,15 +303,15 @@ N_IF_EXPR    	: T_IF N_EXPR N_EXPR N_EXPR
 			{
 				printRule("IF_EXPR", "if EXPR EXPR EXPR");
 				if($4.type == FUNCTION){
-					yyerror("Arg 3 cannot be a function");
+					yyerror("Arg 3 cannot be function");
 					return(1);
 				}
 				else if ($3.type == FUNCTION){
-					yyerror("Arg 2 cannot be a function");
+					yyerror("Arg 2 cannot be function");
 					return(1);
 				}
 				else if ($2.type == FUNCTION){
-					yyerror("Arg 1 cannot be a function");
+					yyerror("Arg 1 cannot be function");
 					return(1);
 				}
 				if($3.type&$4.type == INT){
@@ -318,21 +327,25 @@ N_LET_EXPR      : T_LETSTAR T_LPAREN N_ID_EXPR_LIST T_RPAREN
 				printRule("LET_EXPR", 
 						"let* ( ID_EXPR_LIST ) EXPR");
 
+				// ERROR HERE LOOK INTO IT
+				endScope();
 				if($5.type == FUNCTION){
-					yyerror("Arg 5 cannot be a function");
+					yyerror("Arg 2 cannot be function");
 					return(1);
 				}
-
-				// if($3.type == FUNCTION){
-				// 	yyerror("Arg 3 cannot be a function");
+				// if($5.numParams > $3.numParams){
+				// 	yyerror(" Too few parameters in function call");
 				// 	return(1);
 				// }
 
-				$$.type 		= FUNCTION;
-				$$.numParams  	= $5.numParams;
-				$$.returnType	= NOT_APPLICABLE;
+				// if($5.numParams < $3.numParams){
+				// 	yyerror(" Too few parameters in function call");
+				// 	return(1);
+				// }
 
-				endScope();
+				$$.type = $5.type;
+				$$.numParams = NOT_APPLICABLE;
+				$$.returnType = NOT_APPLICABLE;
 			}
 			;
 N_ID_EXPR_LIST  : /* epsilon */
@@ -344,8 +357,8 @@ N_ID_EXPR_LIST  : /* epsilon */
 				printRule("ID_EXPR_LIST", 
 							"ID_EXPR_LIST ( IDENT EXPR )");
 				string lexeme = string($3);
-				printf("___Adding %s to symbol table %d\n\n\n\n", $3, $4.type);
-				bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,$4));
+				printf("___Adding %s to symbol table\n", $3);
+				bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,$4.type, $4.numParams,$4.returnType));
 				if (! success) {
 					yyerror("Multiply defined identifier");
 					return(0);
@@ -357,14 +370,14 @@ N_LAMBDA_EXPR   : T_LAMBDA T_LPAREN N_ID_LIST T_RPAREN N_EXPR
 				printRule("LAMBDA_EXPR", 
 						"lambda ( ID_LIST ) EXPR");
 
+				endScope();
 				if($5.type == FUNCTION){
-					yyerror("Arg 5 cannot be a function");
+					yyerror("Arg 2 cannot be function");
 					return(1);
 				}
 				$$.type 		= FUNCTION;
-				$$.numParams  	= $5.numParams;
-				$$.returnType	= NOT_APPLICABLE;
-				endScope();
+				$$.numParams 	= $3.numParams;
+				$$.returnType	= $5.type;
 			}
 			;
 N_ID_LIST       : /* epsilon */
@@ -377,44 +390,54 @@ N_ID_LIST       : /* epsilon */
 					printRule("ID_LIST", "ID_LIST IDENT");
 					string lexeme = string($2);
                 	printf("___Adding %s to symbol table\n", $2);
-                	bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,UNDEFINED));
+                	bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,INT));
                 	if (! success) {
 						yyerror("Multiply defined identifier");
 						return(0);
                 	}
+					$$.type 		= INT;
+					$$.numParams 	= $1.numParams + 1;
+					$$.returnType	= INT;
 			}
 			;
 N_PRINT_EXPR    : T_PRINT N_EXPR
 			{
 				printRule("PRINT_EXPR", "print EXPR");
 				if($2.type == FUNCTION){
-					yyerror("Arg 2 cannot be a function");
+					yyerror("Arg 1 cannot be function");
 					return(1);
 				}
-				$$.type 		= INT_OR_STR;
+				$$.type 		= $2.type;
 				$$.numParams 	= NOT_APPLICABLE;
-				$$.returnType 	= INT_OR_STR;
+				$$.returnType 	= NOT_APPLICABLE;
 			}
 			;
 N_INPUT_EXPR    : T_INPUT
 			{
 				printRule("INPUT_EXPR", "input");
-				$$.type 		= INT_OR_STR;
+				$$.type 		= INT;
 				$$.numParams 	= NOT_APPLICABLE;
-				$$.returnType 	= INT_OR_STR;
+				$$.returnType 	= NOT_APPLICABLE;
 
 			}
 			;
 N_EXPR_LIST     : N_EXPR N_EXPR_LIST  
 			{
 				printRule("EXPR_LIST", "EXPR EXPR_LIST");
+				if($1.type == FUNCTION){
+					$$.type = $1.returnType;
+				}
 			}
                 | N_EXPR
 			{
 				printRule("EXPR_LIST", "EXPR");
+				// if($1.type == FUNCTION){
+				// 	yyerror("Arg 1 cannot be a function");
+				// 	return(0);
+				// }
 				$$.type 		= $1.type;
-				$$.numParams 	= NOT_APPLICABLE;
-				$$.returnType	= NOT_APPLICABLE;
+				$$.numParams 	= $1.numParams;
+				$$.returnType	= $1.returnType;
 			}
 			;
 N_BIN_OP	     : N_ARITH_OP
@@ -452,7 +475,7 @@ N_ARITH_OP	     : T_ADD
 				printRule("ARITH_OP", "/");
 			}
 			;
-N_REL_OP	     : T_LT
+N_REL_OP	: T_LT
 			{
 				printRule("REL_OP", "<");
 			}	
