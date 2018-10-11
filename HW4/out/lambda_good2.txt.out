@@ -42,9 +42,6 @@ TOKEN: RPAREN    LEXEME: )
 EXPR_LIST -> EXPR
 EXPR_LIST -> EXPR EXPR_LIST
 EXPR_LIST -> EXPR EXPR_LIST
-PARENTHESIZED_EXPR -> EXPR_LIST
-EXPR -> ( PARENTHESIZED_EXPR )
-START -> EXPR
-
----- Completed parsing ----
-
+------ NUM EXP 32768
+------ NUM ACT -2
+Line 1: Too many parameters in function call

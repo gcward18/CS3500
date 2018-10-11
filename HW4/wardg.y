@@ -131,7 +131,7 @@ N_EXPR		: N_CONST
 
 				$$.type 		=	scopeStack.top().getType($1);
 				// printf("---- TYPE %d ------", scopeStack.top().getType($1));
-				$$.numParams	=	1;
+				$$.numParams	=	$$.numParams + 1;
 				$$.returnType	= 	NOT_APPLICABLE;
 			}
 			| T_LPAREN N_PARENTHESIZED_EXPR T_RPAREN
@@ -333,19 +333,10 @@ N_LET_EXPR      : T_LETSTAR T_LPAREN N_ID_EXPR_LIST T_RPAREN
 					yyerror("Arg 2 cannot be function");
 					return(1);
 				}
-				// if($5.numParams > $3.numParams){
-				// 	yyerror(" Too few parameters in function call");
-				// 	return(1);
-				// }
-
-				// if($5.numParams < $3.numParams){
-				// 	yyerror(" Too few parameters in function call");
-				// 	return(1);
-				// }
 
 				$$.type = $5.type;
-				$$.numParams = NOT_APPLICABLE;
-				$$.returnType = NOT_APPLICABLE;
+				$$.numParams = $5.numParams;
+				$$.returnType = $5.returnType;
 			}
 			;
 N_ID_EXPR_LIST  : /* epsilon */
@@ -357,12 +348,19 @@ N_ID_EXPR_LIST  : /* epsilon */
 				printRule("ID_EXPR_LIST", 
 							"ID_EXPR_LIST ( IDENT EXPR )");
 				string lexeme = string($3);
+
 				printf("___Adding %s to symbol table\n", $3);
+				
 				bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,$4.type, $4.numParams,$4.returnType));
+				
 				if (! success) {
 					yyerror("Multiply defined identifier");
 					return(0);
 				}
+
+				$$.type = $4.type;
+				$$.numParams	= $4.numParams;
+				$$.returnType	= $4.returnType;
 			}
 			;
 N_LAMBDA_EXPR   : T_LAMBDA T_LPAREN N_ID_LIST T_RPAREN N_EXPR
@@ -408,16 +406,16 @@ N_PRINT_EXPR    : T_PRINT N_EXPR
 					return(1);
 				}
 				$$.type 		= $2.type;
-				$$.numParams 	= NOT_APPLICABLE;
-				$$.returnType 	= NOT_APPLICABLE;
+				$$.numParams 	= $2.numParams;
+				$$.returnType 	= $2.returnType;
 			}
 			;
 N_INPUT_EXPR    : T_INPUT
 			{
 				printRule("INPUT_EXPR", "input");
 				$$.type 		= INT;
-				$$.numParams 	= NOT_APPLICABLE;
-				$$.returnType 	= NOT_APPLICABLE;
+				$$.numParams 	= 1;
+				$$.returnType 	= INT;
 
 			}
 			;
@@ -426,6 +424,17 @@ N_EXPR_LIST     : N_EXPR N_EXPR_LIST
 				printRule("EXPR_LIST", "EXPR EXPR_LIST");
 				if($1.type == FUNCTION){
 					$$.type = $1.returnType;
+				}
+				if($1.numParams < $2.numParams){
+					printf("------ NUM EXP %d\n------ NUM ACT %d\n",$1.numParams, $2.numParams);
+					yyerror("Too few parameters in function call");
+					
+					return(1);
+				}
+				if($1.numParams > $2.numParams){
+					printf("------ NUM EXP %d\n------ NUM ACT %d\n",$1.numParams, $2.numParams);
+					yyerror("Too many parameters in function call");
+					return(1);
 				}
 			}
                 | N_EXPR
