@@ -11,9 +11,4 @@ CONST -> STRCONST
 EXPR -> CONST
 IF_EXPR -> if EXPR EXPR EXPR
 PARENTHESIZED_EXPR -> IF_EXPR
-TOKEN: RPAREN    LEXEME: )
-EXPR -> ( PARENTHESIZED_EXPR )
-START -> EXPR
-
----- Completed parsing ----
-
+Line 1: Arg 1 cannot be a function

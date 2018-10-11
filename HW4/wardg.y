@@ -40,12 +40,6 @@ using namespace std;
 #define LOGICAL_OP			9
 #define RELATIONAL_OP			10
 
-typedef struct{
-	int type; 	// one of the above type codes
-	int numParams;  // number of Parameters and return Type only applicable if type == FUNCTION
-	int returnType;
-} TYPE_INFO;
-
 int num 	 = 0;
 int numLines = 1; 
 
@@ -195,7 +189,7 @@ N_PARENTHESIZED_EXPR	: N_ARITHLOGIC_EXPR
 				{
 					printRule("PARENTHESIZED_EXPR", 
 									"LET_EXPR");
-					// $$.type 		= $1.type;
+					$$.type 		= FUNCTION;
 					// $$.numParams 	= NOT_APPLICABLE;
 					// $$.returnType 	= NOT_APPLICABLE;
 				}
@@ -203,7 +197,7 @@ N_PARENTHESIZED_EXPR	: N_ARITHLOGIC_EXPR
 				{
 					printRule("PARENTHESIZED_EXPR", 
 							"LAMBDA_EXPR");
-					// $$.type 		= $1.type;
+					$$.type 		= FUNCTION;
 					// $$.numParams 	= NOT_APPLICABLE;
 					// $$.returnType 	= NOT_APPLICABLE;
 				}
@@ -307,10 +301,10 @@ N_IF_EXPR    	: T_IF N_EXPR N_EXPR N_EXPR
 					yyerror("Arg 2 cannot be a function");
 					return(1);
 				}
-				// else if ($2.type == FUNCTION){
-				// 	yyerror("Arg 1 cannot be a function");
-				// 	return(1);
-				// }
+				else if ($2.type == FUNCTION){
+					yyerror("Arg 1 cannot be a function");
+					return(1);
+				}
 				if($3.type&$4.type == INT){
 					$$.type 		= INT;
 					$$.numParams 	= $2.numParams + $3.numParams;
@@ -328,9 +322,16 @@ N_LET_EXPR      : T_LETSTAR T_LPAREN N_ID_EXPR_LIST T_RPAREN
 					yyerror("Arg 5 cannot be a function");
 					return(1);
 				}
+
+				// if($3.type == FUNCTION){
+				// 	yyerror("Arg 3 cannot be a function");
+				// 	return(1);
+				// }
+
 				$$.type 		= FUNCTION;
 				$$.numParams  	= $5.numParams;
 				$$.returnType	= NOT_APPLICABLE;
+
 				endScope();
 			}
 			;
@@ -343,8 +344,8 @@ N_ID_EXPR_LIST  : /* epsilon */
 				printRule("ID_EXPR_LIST", 
 							"ID_EXPR_LIST ( IDENT EXPR )");
 				string lexeme = string($3);
-				printf("___Adding %s to symbol table\n", $3);
-				bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,UNDEFINED));
+				printf("___Adding %s to symbol table %d\n\n\n\n", $3, $4.type);
+				bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,$4));
 				if (! success) {
 					yyerror("Multiply defined identifier");
 					return(0);
