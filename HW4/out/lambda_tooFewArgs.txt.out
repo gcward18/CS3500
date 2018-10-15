@@ -32,6 +32,8 @@ LAMBDA_EXPR -> lambda ( ID_LIST ) EXPR
 
 ___Exiting scope...
 
+0
+
 PARENTHESIZED_EXPR -> LAMBDA_EXPR
 TOKEN: RPAREN    LEXEME: )
 EXPR -> ( PARENTHESIZED_EXPR )
@@ -45,6 +47,9 @@ TOKEN: RPAREN    LEXEME: )
 EXPR_LIST -> EXPR
 EXPR_LIST -> EXPR EXPR_LIST
 EXPR_LIST -> EXPR EXPR_LIST
------- NUM EXP 32770
------- NUM ACT -2
-Line 1: Too many parameters in function call
+PARENTHESIZED_EXPR -> EXPR_LIST
+EXPR -> ( PARENTHESIZED_EXPR )
+START -> EXPR
+
+---- Completed parsing ----
+

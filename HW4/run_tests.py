@@ -8,7 +8,7 @@ for file_in_input in os.listdir():
 os.chdir('../HW4_expected_output')
 for file_in_out in os.listdir():
         #os.system('diff -C ../out/%s %s' %(file_in_out,file_in_out))
-        if "tooMany" in file_in_out :#or "lambda" in file_in_input or "if" in file_in_out:
-                os.system('diff ../out/%s %s --ignore-space-change --side-by-side --ignore-case --ignore-blank-lines' % (file_in_out,file_in_out)) 
+        # if "lambda_tooManyArgs" in file_in_out :#or "lambda" in file_in_input or "if" in file_in_out:
+        os.system('diff ../out/%s %s --ignore-space-change --side-by-side --ignore-case --ignore-blank-lines' % (file_in_out,file_in_out)) 
 
-                print('----- %s --------\n'%(file_in_out))
+        print('----- %s --------\n'%(file_in_out))

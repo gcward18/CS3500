@@ -1,5 +1,4 @@
-(let* ( (f0 (lambda () 0))
-     )
+(let* ( (f0 (lambda () 0)))
   (
    (f0)
   )

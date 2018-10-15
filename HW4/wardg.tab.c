@@ -71,7 +71,7 @@
 using namespace std;
 
 
-#define NOT_APPLICABLE			-2
+#define NOT_APPLICABLE		-2
 #define UNDEFINED 			-1
 #define FUNCTION			0
 #define INT 				1
@@ -80,10 +80,10 @@ using namespace std;
 #define BOOL 				4
 #define INT_OR_BOOL			5
 #define STR_OR_BOOL			6
-#define INT_OR_STR_OR_BOOL		7
-#define ARITHMETIC_OP   		8
+#define INT_OR_STR_OR_BOOL	7
+#define ARITHMETIC_OP   	8
 #define LOGICAL_OP			9
-#define RELATIONAL_OP			10
+#define RELATIONAL_OP		10
 
 int num 	 = 0;
 int numLines = 1; 
@@ -92,6 +92,7 @@ void printRule(const char *, const char *);
 int  yyerror(const char *s);
 void printTokenInfo(const char* tokenType, const char* lexeme);
 stack<SYMBOL_TABLE> scopeStack;
+SYMBOL_TABLE returned_table;
 // const int UNDEFINED;
 
 extern "C" 
@@ -107,7 +108,7 @@ void beginScope( )
     printf("\n___Entering new scope...\n\n");
 }
 
-void endScope( ) 
+SYMBOL_TABLE endScope( ) 
 {
     scopeStack.pop( );
     printf("\n___Exiting scope...\n\n");
@@ -132,7 +133,7 @@ bool findEntryInAnyScope(const string theName)
 }
 
 
-#line 136 "wardg.tab.c" /* yacc.c:339  */
+#line 137 "wardg.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -199,13 +200,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 90 "wardg.y" /* yacc.c:355  */
+#line 91 "wardg.y" /* yacc.c:355  */
 
 	char* text;
 	TYPE_INFO typeInfo;
 	int num;
 
-#line 209 "wardg.tab.c" /* yacc.c:355  */
+#line 210 "wardg.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -222,7 +223,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 226 "wardg.tab.c" /* yacc.c:358  */
+#line 227 "wardg.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -522,11 +523,11 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   110,   110,   117,   124,   137,   145,   152,   159,   166,
-     174,   182,   191,   199,   207,   215,   223,   232,   243,   302,
-     324,   343,   346,   366,   382,   386,   401,   413,   422,   440,
-     452,   458,   464,   470,   474,   478,   482,   487,   491,   495,
-     499,   503,   507,   512,   516,   521
+       0,   111,   111,   118,   125,   137,   145,   152,   159,   166,
+     174,   182,   191,   199,   207,   215,   223,   232,   243,   300,
+     327,   348,   351,   371,   389,   394,   411,   423,   432,   454,
+     466,   472,   478,   484,   488,   492,   496,   501,   505,   509,
+     513,   517,   521,   526,   530,   535
 };
 #endif
 
@@ -1345,28 +1346,28 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 111 "wardg.y" /* yacc.c:1646  */
+#line 112 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("START", "EXPR");
 				printf("\n---- Completed parsing ----\n\n");
 				return 0;
 			}
-#line 1355 "wardg.tab.c" /* yacc.c:1646  */
+#line 1356 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 118 "wardg.y" /* yacc.c:1646  */
+#line 119 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("EXPR", "CONST");
 				(yyval.typeInfo).type 		= (yyvsp[0].typeInfo).type;
-				(yyval.typeInfo).numParams	= NOT_APPLICABLE;
+				(yyval.typeInfo).numParams	= (yyvsp[0].typeInfo).numParams;
 				(yyval.typeInfo).returnType	= NOT_APPLICABLE;				
 			}
-#line 1366 "wardg.tab.c" /* yacc.c:1646  */
+#line 1367 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 125 "wardg.y" /* yacc.c:1646  */
+#line 126 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("EXPR", "IDENT");
 				if (!findEntryInAnyScope((yyvsp[0].text))) {
@@ -1375,9 +1376,8 @@ yyreduce:
 				}
 
 				(yyval.typeInfo).type 		=	scopeStack.top().getType((yyvsp[0].text));
-				// printf("---- TYPE %d ------", scopeStack.top().getType($1));
-				(yyval.typeInfo).numParams	=	(yyval.typeInfo).numParams + 1;
-				(yyval.typeInfo).returnType	= 	NOT_APPLICABLE;
+				(yyval.typeInfo).numParams	=	scopeStack.top().getNumParams((yyvsp[0].text));
+				(yyval.typeInfo).returnType	= 	scopeStack.top().getReturnType((yyvsp[0].text));
 			}
 #line 1383 "wardg.tab.c" /* yacc.c:1646  */
     break;
@@ -1398,7 +1398,7 @@ yyreduce:
     {
 				printRule("CONST", "INTCONST");
 				(yyval.typeInfo).type 		= INT;
-				(yyval.typeInfo).numParams 	= NOT_APPLICABLE;
+				(yyval.typeInfo).numParams 	= (yyval.typeInfo).numParams + 1;
 				(yyval.typeInfo).returnType 	= NOT_APPLICABLE;
 			}
 #line 1405 "wardg.tab.c" /* yacc.c:1646  */
@@ -1409,7 +1409,7 @@ yyreduce:
     {
 				printRule("CONST", "STRCONST");
 				(yyval.typeInfo).type 		= STR;
-				(yyval.typeInfo).numParams 	= NOT_APPLICABLE;
+				(yyval.typeInfo).numParams 	= (yyval.typeInfo).numParams + 1;
 				(yyval.typeInfo).returnType 	= NOT_APPLICABLE;
 			}
 #line 1416 "wardg.tab.c" /* yacc.c:1646  */
@@ -1420,7 +1420,7 @@ yyreduce:
     {
 				printRule("CONST","t");
 				(yyval.typeInfo).type 		= BOOL;
-				(yyval.typeInfo).numParams 	= NOT_APPLICABLE;
+				(yyval.typeInfo).numParams 	= (yyval.typeInfo).numParams + 1;
 				(yyval.typeInfo).returnType 	= NOT_APPLICABLE;
 			}
 #line 1427 "wardg.tab.c" /* yacc.c:1646  */
@@ -1431,7 +1431,7 @@ yyreduce:
     {
 				printRule("CONST", "nil");
 				(yyval.typeInfo).type 		= BOOL;
-				(yyval.typeInfo).numParams 	= NOT_APPLICABLE;
+				(yyval.typeInfo).numParams 	= (yyval.typeInfo).numParams + 1;
 				(yyval.typeInfo).returnType 	= NOT_APPLICABLE;
 			}
 #line 1438 "wardg.tab.c" /* yacc.c:1646  */
@@ -1454,7 +1454,7 @@ yyreduce:
     {
 					printRule("PARENTHESIZED_EXPR", "IF_EXPR");
 
-					(yyval.typeInfo).type 			= (yyvsp[0].typeInfo).type;
+					(yyval.typeInfo).type 		= (yyvsp[0].typeInfo).type;
 					(yyval.typeInfo).numParams 	= (yyvsp[0].typeInfo).numParams;
 					(yyval.typeInfo).returnType 	= (yyvsp[0].typeInfo).returnType;
 
@@ -1550,12 +1550,10 @@ yyreduce:
 							(yyval.typeInfo).returnType 	= INT;
 						}
 						else if ((yyvsp[-1].typeInfo).type != INT){
-							// printf("------ TYPE 1 = %d \n--------TYPE2 = %d \n\n", $2.type,$3.type);
 							yyerror("Arg 1 must be integer");
 							return(1);
 						}
 						else if ((yyvsp[0].typeInfo).type != INT){
-							// printf("------ TYPE 1 = %d \n--------TYPE2 = %d \n\n", $2.type,$3.type);
 							yyerror("Arg 2 must be integer");
 							return(1);
 						}
@@ -1596,11 +1594,11 @@ yyreduce:
 						return(1);
 					}
 				}
-#line 1600 "wardg.tab.c" /* yacc.c:1646  */
+#line 1598 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 303 "wardg.y" /* yacc.c:1646  */
+#line 301 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("IF_EXPR", "if EXPR EXPR EXPR");
 				if((yyvsp[0].typeInfo).type == FUNCTION){
@@ -1615,23 +1613,30 @@ yyreduce:
 					yyerror("Arg 1 cannot be function");
 					return(1);
 				}
-				if((yyvsp[-1].typeInfo).type&(yyvsp[0].typeInfo).type == INT){
+				if((yyvsp[-2].typeInfo).type&(yyvsp[-1].typeInfo).type&(yyvsp[0].typeInfo).type == INT){
 					(yyval.typeInfo).type 		= INT;
-					(yyval.typeInfo).numParams 	= (yyvsp[-2].typeInfo).numParams + (yyvsp[-1].typeInfo).numParams;
+					(yyval.typeInfo).numParams 	= (yyvsp[-2].typeInfo).numParams + (yyvsp[-1].typeInfo).numParams + (yyvsp[0].typeInfo).numParams;
 					(yyval.typeInfo).returnType  	= INT;
 				}
+				else if((yyvsp[-2].typeInfo).type&(yyvsp[-1].typeInfo).type&(yyvsp[0].typeInfo).type == STR){
+					(yyval.typeInfo).type 		= STR;
+					(yyval.typeInfo).numParams 	= (yyvsp[-2].typeInfo).numParams + (yyvsp[-1].typeInfo).numParams + (yyvsp[0].typeInfo).numParams;
+					(yyval.typeInfo).returnType  	= STR;
+				}
 			}
-#line 1625 "wardg.tab.c" /* yacc.c:1646  */
+#line 1628 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 326 "wardg.y" /* yacc.c:1646  */
+#line 329 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("LET_EXPR", 
 						"let* ( ID_EXPR_LIST ) EXPR");
 
 				// ERROR HERE LOOK INTO IT
+				returned_table = scopeStack.top();
 				endScope();
+
 				if((yyvsp[0].typeInfo).type == FUNCTION){
 					yyerror("Arg 2 cannot be function");
 					return(1);
@@ -1641,19 +1646,19 @@ yyreduce:
 				(yyval.typeInfo).numParams = (yyvsp[0].typeInfo).numParams;
 				(yyval.typeInfo).returnType = (yyvsp[0].typeInfo).returnType;
 			}
-#line 1645 "wardg.tab.c" /* yacc.c:1646  */
+#line 1650 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 343 "wardg.y" /* yacc.c:1646  */
+#line 348 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("ID_EXPR_LIST", "epsilon");
 			}
-#line 1653 "wardg.tab.c" /* yacc.c:1646  */
+#line 1658 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 347 "wardg.y" /* yacc.c:1646  */
+#line 352 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("ID_EXPR_LIST", 
 							"ID_EXPR_LIST ( IDENT EXPR )");
@@ -1672,41 +1677,46 @@ yyreduce:
 				(yyval.typeInfo).numParams	= (yyvsp[-1].typeInfo).numParams;
 				(yyval.typeInfo).returnType	= (yyvsp[-1].typeInfo).returnType;
 			}
-#line 1676 "wardg.tab.c" /* yacc.c:1646  */
+#line 1681 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 367 "wardg.y" /* yacc.c:1646  */
+#line 372 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("LAMBDA_EXPR", 
 						"lambda ( ID_LIST ) EXPR");
 
-				endScope();
+				returned_table = endScope();
 				if((yyvsp[0].typeInfo).type == FUNCTION){
 					yyerror("Arg 2 cannot be function");
 					return(1);
 				}
+
 				(yyval.typeInfo).type 		= FUNCTION;
+				printf("%d\n\n",returned_table.getSize());
 				(yyval.typeInfo).numParams 	= (yyvsp[-2].typeInfo).numParams;
 				(yyval.typeInfo).returnType	= (yyvsp[0].typeInfo).type;
 			}
-#line 1694 "wardg.tab.c" /* yacc.c:1646  */
+#line 1701 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 382 "wardg.y" /* yacc.c:1646  */
+#line 389 "wardg.y" /* yacc.c:1646  */
     {
-				printRule("ID_LIST", "epsilon");
+				printRule("ID_LIST", "epsilon");				
+				// printf("------ NUM EPSILON %d\n",$$.numParams);
 			}
-#line 1702 "wardg.tab.c" /* yacc.c:1646  */
+#line 1710 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 387 "wardg.y" /* yacc.c:1646  */
+#line 395 "wardg.y" /* yacc.c:1646  */
     {
 					printRule("ID_LIST", "ID_LIST IDENT");
 					string lexeme = string((yyvsp[0].text));
                 	printf("___Adding %s to symbol table\n", (yyvsp[0].text));
+
+					// add the identifier to the stack, this will be an integer for now
                 	bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,INT));
                 	if (! success) {
 						yyerror("Multiply defined identifier");
@@ -1716,11 +1726,11 @@ yyreduce:
 					(yyval.typeInfo).numParams 	= (yyvsp[-1].typeInfo).numParams + 1;
 					(yyval.typeInfo).returnType	= INT;
 			}
-#line 1720 "wardg.tab.c" /* yacc.c:1646  */
+#line 1730 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 402 "wardg.y" /* yacc.c:1646  */
+#line 412 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("PRINT_EXPR", "print EXPR");
 				if((yyvsp[0].typeInfo).type == FUNCTION){
@@ -1731,45 +1741,49 @@ yyreduce:
 				(yyval.typeInfo).numParams 	= (yyvsp[0].typeInfo).numParams;
 				(yyval.typeInfo).returnType 	= (yyvsp[0].typeInfo).returnType;
 			}
-#line 1735 "wardg.tab.c" /* yacc.c:1646  */
+#line 1745 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 414 "wardg.y" /* yacc.c:1646  */
+#line 424 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("INPUT_EXPR", "input");
-				(yyval.typeInfo).type 		= INT;
+				(yyval.typeInfo).type 		= INT_OR_STR;
 				(yyval.typeInfo).numParams 	= 1;
-				(yyval.typeInfo).returnType 	= INT;
+				(yyval.typeInfo).returnType 	= INT_OR_STR;
 
 			}
-#line 1747 "wardg.tab.c" /* yacc.c:1646  */
+#line 1757 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 423 "wardg.y" /* yacc.c:1646  */
+#line 433 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("EXPR_LIST", "EXPR EXPR_LIST");
+				// printf("------ NUM EXP %d\n------ NUM ACT %d\n",$1.numParams, $2.numParams);
+
 				if((yyvsp[-1].typeInfo).type == FUNCTION){
-					(yyval.typeInfo).type = (yyvsp[-1].typeInfo).returnType;
+					if((yyvsp[-1].typeInfo).numParams < (yyval.typeInfo).numParams){printf("------ NUM EXP %d\n------ NUM ACT %d\n",(yyvsp[-1].typeInfo).numParams, (yyval.typeInfo).numParams);
+						yyerror("Too many parameters in function call");
+						return(1);
+					}
+					else if((yyvsp[-1].typeInfo).numParams > (yyval.typeInfo).numParams){printf("------ NUM EXP %d\n------ NUM ACT %d\n",(yyvsp[-1].typeInfo).numParams, (yyval.typeInfo).numParams);
+						yyerror("Too few parameters in function call");
+						return(1);
+					}
+					(yyval.typeInfo).type 		= (yyvsp[-1].typeInfo).returnType;
+					(yyval.typeInfo).numParams 	= (yyvsp[-1].typeInfo).numParams;
+					(yyval.typeInfo).returnType 	= (yyvsp[-1].typeInfo).returnType;
 				}
-				if((yyvsp[-1].typeInfo).numParams < (yyvsp[0].typeInfo).numParams){
-					printf("------ NUM EXP %d\n------ NUM ACT %d\n",(yyvsp[-1].typeInfo).numParams, (yyvsp[0].typeInfo).numParams);
-					yyerror("Too few parameters in function call");
-					
-					return(1);
-				}
-				if((yyvsp[-1].typeInfo).numParams > (yyvsp[0].typeInfo).numParams){
-					printf("------ NUM EXP %d\n------ NUM ACT %d\n",(yyvsp[-1].typeInfo).numParams, (yyvsp[0].typeInfo).numParams);
-					yyerror("Too many parameters in function call");
-					return(1);
-				}
+				(yyval.typeInfo).type 		= (yyvsp[-1].typeInfo).type;
+				(yyval.typeInfo).numParams 	= (yyvsp[-1].typeInfo).numParams + (yyvsp[0].typeInfo).numParams;
+				(yyval.typeInfo).returnType	= (yyvsp[-1].typeInfo).returnType;
 			}
-#line 1769 "wardg.tab.c" /* yacc.c:1646  */
+#line 1783 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 441 "wardg.y" /* yacc.c:1646  */
+#line 455 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("EXPR_LIST", "EXPR");
 				// if($1.type == FUNCTION){
@@ -1777,145 +1791,145 @@ yyreduce:
 				// 	return(0);
 				// }
 				(yyval.typeInfo).type 		= (yyvsp[0].typeInfo).type;
-				(yyval.typeInfo).numParams 	= (yyvsp[0].typeInfo).numParams;
+				(yyval.typeInfo).numParams 	= (yyval.typeInfo).numParams + (yyvsp[0].typeInfo).numParams;
 				(yyval.typeInfo).returnType	= (yyvsp[0].typeInfo).returnType;
 			}
-#line 1784 "wardg.tab.c" /* yacc.c:1646  */
+#line 1798 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 453 "wardg.y" /* yacc.c:1646  */
+#line 467 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("BIN_OP", "ARITH_OP");
 				(yyval.num) = ARITHMETIC_OP;
 			}
-#line 1793 "wardg.tab.c" /* yacc.c:1646  */
+#line 1807 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 459 "wardg.y" /* yacc.c:1646  */
+#line 473 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("BIN_OP", "LOG_OP");
 				(yyval.num) = LOGICAL_OP;				
 			}
-#line 1802 "wardg.tab.c" /* yacc.c:1646  */
+#line 1816 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 465 "wardg.y" /* yacc.c:1646  */
+#line 479 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("BIN_OP", "REL_OP");
 				(yyval.num) = RELATIONAL_OP;
 			}
-#line 1811 "wardg.tab.c" /* yacc.c:1646  */
+#line 1825 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 471 "wardg.y" /* yacc.c:1646  */
+#line 485 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("ARITH_OP", "+");
 			}
-#line 1819 "wardg.tab.c" /* yacc.c:1646  */
+#line 1833 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 475 "wardg.y" /* yacc.c:1646  */
+#line 489 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("ARITH_OP", "-");
 			}
-#line 1827 "wardg.tab.c" /* yacc.c:1646  */
+#line 1841 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 479 "wardg.y" /* yacc.c:1646  */
+#line 493 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("ARITH_OP", "*");
 			}
-#line 1835 "wardg.tab.c" /* yacc.c:1646  */
+#line 1849 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 483 "wardg.y" /* yacc.c:1646  */
+#line 497 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("ARITH_OP", "/");
 			}
-#line 1843 "wardg.tab.c" /* yacc.c:1646  */
+#line 1857 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 488 "wardg.y" /* yacc.c:1646  */
+#line 502 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("REL_OP", "<");
 			}
-#line 1851 "wardg.tab.c" /* yacc.c:1646  */
+#line 1865 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 492 "wardg.y" /* yacc.c:1646  */
+#line 506 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("REL_OP", ">");
 			}
-#line 1859 "wardg.tab.c" /* yacc.c:1646  */
+#line 1873 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 496 "wardg.y" /* yacc.c:1646  */
+#line 510 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("REL_OP", "<=");
 			}
-#line 1867 "wardg.tab.c" /* yacc.c:1646  */
+#line 1881 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 500 "wardg.y" /* yacc.c:1646  */
+#line 514 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("REL_OP", ">=");
 			}
-#line 1875 "wardg.tab.c" /* yacc.c:1646  */
+#line 1889 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 504 "wardg.y" /* yacc.c:1646  */
+#line 518 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("REL_OP", "=");
 			}
-#line 1883 "wardg.tab.c" /* yacc.c:1646  */
+#line 1897 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 508 "wardg.y" /* yacc.c:1646  */
+#line 522 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("REL_OP", "/=");
 			}
-#line 1891 "wardg.tab.c" /* yacc.c:1646  */
+#line 1905 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 513 "wardg.y" /* yacc.c:1646  */
+#line 527 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("LOG_OP", "and");
 			}
-#line 1899 "wardg.tab.c" /* yacc.c:1646  */
+#line 1913 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 517 "wardg.y" /* yacc.c:1646  */
+#line 531 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("LOG_OP", "or");
 			}
-#line 1907 "wardg.tab.c" /* yacc.c:1646  */
+#line 1921 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 522 "wardg.y" /* yacc.c:1646  */
+#line 536 "wardg.y" /* yacc.c:1646  */
     {
 				printRule("UN_OP", "not");
 			}
-#line 1915 "wardg.tab.c" /* yacc.c:1646  */
+#line 1929 "wardg.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1919 "wardg.tab.c" /* yacc.c:1646  */
+#line 1933 "wardg.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2143,7 +2157,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 528 "wardg.y" /* yacc.c:1906  */
+#line 542 "wardg.y" /* yacc.c:1906  */
 
 
 #include "lex.yy.c"

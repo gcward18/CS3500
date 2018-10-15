@@ -41,12 +41,31 @@ public:
   }
 
     // If a SYMBOL_TABLE_ENTRY with name theName is
-  // found in this symbol table, then return the entry
+  // found in this symbol table, then return the entry type
   int getType(string theName) 
   {
     return hashTable[theName].getType();
   }
 
+  // If a SYMBOL_TABLE_ENTRY with name theName is
+  // found in this symbol table, then return the entry numParams
+  int getNumParams(string theName) 
+  {
+    return hashTable[theName].getNumParams();
+  }
+
+  // If a SYMBOL_TABLE_ENTRY with name theName is
+  // found in this symbol table, then return the entry returnType
+  int getReturnType(string theName) 
+  {
+    return hashTable[theName].getReturnType();
+  }
+
+  // get the number of bytes in the stack
+  int getSize()
+  {
+    return hashTable.size();
+  }
 };
 
 #endif  // SYMBOL_TABLE_H
