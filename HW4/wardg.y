@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stack>
+#include <queue>
 #include"SymbolTable.h"
 using namespace std;
 
@@ -42,14 +43,18 @@ using namespace std;
 
 int num 	 = 0;
 int numLines = 1; 
+int numArgs  = 0;
+int numParams = 0;
+int var_count = 0;
+bool isLambda = false;
+bool isLet	  = false;
+
 
 void printRule(const char *, const char *);
 int  yyerror(const char *s);
 void printTokenInfo(const char* tokenType, const char* lexeme);
 stack<SYMBOL_TABLE> scopeStack;
-SYMBOL_TABLE returned_table;
-// const int UNDEFINED;
-
+queue<int> lambda;
 extern "C" 
 {
     int yyparse(void);
@@ -63,10 +68,12 @@ void beginScope( )
     printf("\n___Entering new scope...\n\n");
 }
 
-SYMBOL_TABLE endScope( ) 
+int endScope( ) 
 {
+	int size = scopeStack.top().getMap().size();
     scopeStack.pop( );
     printf("\n___Exiting scope...\n\n");
+	return size;
 }
 
 bool findEntryInAnyScope(const string theName) 
@@ -146,28 +153,28 @@ N_CONST		: T_INTCONST
 			{
 				printRule("CONST", "INTCONST");
 				$$.type 		= INT;
-				$$.numParams 	= $$.numParams + 1;
+				$$.numParams 	= 1;
 				$$.returnType 	= NOT_APPLICABLE;
 			}
                 | T_STRCONST
 			{
 				printRule("CONST", "STRCONST");
 				$$.type 		= STR;
-				$$.numParams 	= $$.numParams + 1;
+				$$.numParams 	= 1;
 				$$.returnType 	= NOT_APPLICABLE;
 			}
 			| T_T
 			{
 				printRule("CONST","t");
 				$$.type 		= BOOL;
-				$$.numParams 	= $$.numParams + 1;
+				$$.numParams 	=  1;
 				$$.returnType 	= NOT_APPLICABLE;
 			}
 			| T_NIL
 			{
 				printRule("CONST", "nil");
 				$$.type 		= BOOL;
-				$$.numParams 	= $$.numParams + 1;
+				$$.numParams 	= 1;
 				$$.returnType 	= NOT_APPLICABLE;
 			}
 			;
@@ -180,7 +187,8 @@ N_PARENTHESIZED_EXPR	: N_ARITHLOGIC_EXPR
 					$$.returnType 	= $1.returnType;
 				}
                 | N_IF_EXPR 
-				{
+				{					// add the identifier to the stack, this will be an integer for now
+
 					printRule("PARENTHESIZED_EXPR", "IF_EXPR");
 
 					$$.type 		= $1.type;
@@ -221,12 +229,21 @@ N_PARENTHESIZED_EXPR	: N_ARITHLOGIC_EXPR
 					$$.returnType 	= $1.returnType;
 				}
                 | N_EXPR_LIST 
-				{
+				{		
+					if ($1.numParams>lambda.front() && (isLambda == true && !lambda.empty())){
+						yyerror("Too many parameters in function call");
+						return(1);
+					}
+					else if ($1.numParams<lambda.front() && (isLambda == true && !lambda.empty()) ){
+						yyerror("Too few parameters in function call");
+						return(1);
+					}
 					printRule("PARENTHESIZED_EXPR",
 							"EXPR_LIST");
 					$$.type 		= $1.type;
 					$$.numParams 	= $1.numParams;
 					$$.returnType 	= $1.returnType;
+					lambda.pop();
 				}
 				;
 N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
@@ -329,66 +346,85 @@ N_LET_EXPR      : T_LETSTAR T_LPAREN N_ID_EXPR_LIST T_RPAREN
 			{
 				printRule("LET_EXPR", 
 						"let* ( ID_EXPR_LIST ) EXPR");
-
-				// ERROR HERE LOOK INTO IT
-				returned_table = scopeStack.top();
+				isLambda = false;
+				isLet 	 = true;
 				endScope();
 
-				if($5.type == FUNCTION){
+				if ($5.type == FUNCTION){
 					yyerror("Arg 2 cannot be function");
 					return(1);
 				}
 
 				$$.type = $5.type;
-				$$.numParams = $5.numParams;
+				$$.numParams = numParams;
 				$$.returnType = $5.returnType;
 			}
 			;
 N_ID_EXPR_LIST  : /* epsilon */
 			{
-				printRule("ID_EXPR_LIST", "epsilon");
+				printRule("ID_EXPR_LIST", "epsilon");				
+
+				$$.type 		= UNDEFINED;
+				$$.numParams 	= 0;
+				$$.returnType	= UNDEFINED;
 			}
                 | N_ID_EXPR_LIST T_LPAREN T_IDENT N_EXPR T_RPAREN 
 			{
 				printRule("ID_EXPR_LIST", 
 							"ID_EXPR_LIST ( IDENT EXPR )");
 				string lexeme = string($3);
-
+				
 				printf("___Adding %s to symbol table\n", $3);
 				
 				bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,$4.type, $4.numParams,$4.returnType));
-				
 				if (! success) {
 					yyerror("Multiply defined identifier");
 					return(0);
 				}
 
-				$$.type = $4.type;
-				$$.numParams	= $4.numParams;
-				$$.returnType	= $4.returnType;
+				if(isLet == true)
+					$$.type 		= $4.type;
+				else	
+					$$.type			= $4.returnType;
+				$$.numParams 	= scopeStack.top().getNumParams(string($3));
+				$$.returnType 	= $4.returnType;
 			}
 			;
 N_LAMBDA_EXPR   : T_LAMBDA T_LPAREN N_ID_LIST T_RPAREN N_EXPR
 			{
 				printRule("LAMBDA_EXPR", 
 						"lambda ( ID_LIST ) EXPR");
+				// we are in a lambda function
+				isLambda = true;
 
-				returned_table = endScope();
+				numParams = endScope();
+
 				if($5.type == FUNCTION){
 					yyerror("Arg 2 cannot be function");
 					return(1);
 				}
 
+				if (numParams>$3.numParams){
+					yyerror("Too many parameters in function call");
+					return(1);
+				}
+				else if (numParams<$3.numParams){
+					yyerror("Too few parameters in function call");
+					return(1);
+				}
 				$$.type 		= FUNCTION;
-				printf("%d\n\n",returned_table.getSize());
-				$$.numParams 	= $3.numParams;
+				$$.numParams 	= numParams;
 				$$.returnType	= $5.type;
+				lambda.push($3.numParams);
 			}
 			;
 N_ID_LIST       : /* epsilon */
 			{
 				printRule("ID_LIST", "epsilon");				
-				// printf("------ NUM EPSILON %d\n",$$.numParams);
+
+				$$.type = UNDEFINED;
+				$$.numParams = 0;
+				$$.returnType = UNDEFINED;
 			}
 
 			| N_ID_LIST T_IDENT 
@@ -397,14 +433,18 @@ N_ID_LIST       : /* epsilon */
 					string lexeme = string($2);
                 	printf("___Adding %s to symbol table\n", $2);
 
-					// add the identifier to the stack, this will be an integer for now
+					// adding lexeme to the scope stack as an integers
                 	bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,INT));
+
+					// If the lexeme wasn't able to be added because there was the same lexeme already
+					// on the stack then we throw an error
                 	if (! success) {
 						yyerror("Multiply defined identifier");
 						return(0);
                 	}
+
 					$$.type 		= INT;
-					$$.numParams 	= $1.numParams + 1;
+					$$.numParams 	= $$.numParams + 1;
 					$$.returnType	= INT;
 			}
 			;
@@ -416,50 +456,42 @@ N_PRINT_EXPR    : T_PRINT N_EXPR
 					return(1);
 				}
 				$$.type 		= $2.type;
-				$$.numParams 	= $2.numParams;
+				$$.numParams 	= 0;
 				$$.returnType 	= $2.returnType;
 			}
 			;
 N_INPUT_EXPR    : T_INPUT
 			{
 				printRule("INPUT_EXPR", "input");
-				$$.type 		= INT_OR_STR;
-				$$.numParams 	= 1;
-				$$.returnType 	= INT_OR_STR;
+				$$.type 		= INT;
+				$$.numParams 	= 0;
+				$$.returnType 	= INT;
 
 			}
 			;
 N_EXPR_LIST     : N_EXPR N_EXPR_LIST  
 			{
 				printRule("EXPR_LIST", "EXPR EXPR_LIST");
-				// printf("------ NUM EXP %d\n------ NUM ACT %d\n",$1.numParams, $2.numParams);
 
 				if($1.type == FUNCTION){
-					if($1.numParams < $$.numParams){printf("------ NUM EXP %d\n------ NUM ACT %d\n",$1.numParams, $$.numParams);
-						yyerror("Too many parameters in function call");
-						return(1);
-					}
-					else if($1.numParams > $$.numParams){printf("------ NUM EXP %d\n------ NUM ACT %d\n",$1.numParams, $$.numParams);
-						yyerror("Too few parameters in function call");
-						return(1);
-					}
-					$$.type 		= $1.returnType;
-					$$.numParams 	= $1.numParams;
-					$$.returnType 	= $1.returnType;
+					$$.type = $1.returnType;
 				}
-				$$.type 		= $1.type;
-				$$.numParams 	= $1.numParams + $2.numParams;
+				else
+				 	$$.type = $1.type;
+				$$.numParams 	= $2.numParams + 1;
 				$$.returnType	= $1.returnType;
+				var_count = $$.numParams;
+			
 			}
                 | N_EXPR
 			{
 				printRule("EXPR_LIST", "EXPR");
-				// if($1.type == FUNCTION){
-				// 	yyerror("Arg 1 cannot be a function");
-				// 	return(0);
-				// }
-				$$.type 		= $1.type;
-				$$.numParams 	= $$.numParams + $1.numParams;
+				if($1.type == FUNCTION){
+					$$.type = $1.returnType;
+				}
+				else
+				 	$$.type = $1.type;
+				$$.numParams 	= 0;
 				$$.returnType	= $1.returnType;
 			}
 			;

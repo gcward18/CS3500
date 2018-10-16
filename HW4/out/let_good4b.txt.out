@@ -25,8 +25,6 @@ LAMBDA_EXPR -> lambda ( ID_LIST ) EXPR
 
 ___Exiting scope...
 
-0
-
 PARENTHESIZED_EXPR -> LAMBDA_EXPR
 TOKEN: RPAREN    LEXEME: )
 EXPR -> ( PARENTHESIZED_EXPR )
@@ -54,4 +52,10 @@ LET_EXPR -> let* ( ID_EXPR_LIST ) EXPR
 
 ___Exiting scope...
 
-Line 5: Arg 2 cannot be function
+PARENTHESIZED_EXPR -> LET_EXPR
+TOKEN: RPAREN    LEXEME: )
+EXPR -> ( PARENTHESIZED_EXPR )
+START -> EXPR
+
+---- Completed parsing ----
+

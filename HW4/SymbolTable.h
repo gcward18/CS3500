@@ -62,9 +62,9 @@ public:
   }
 
   // get the number of bytes in the stack
-  int getSize()
+  std::map<string, SYMBOL_TABLE_ENTRY>  getMap()
   {
-    return hashTable.size();
+    return hashTable;
   }
 };
 

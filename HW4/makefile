@@ -5,6 +5,8 @@ program:
 	g++ wardg.tab.c 
 
 test:
-	python3 run_tests.py	
+	python3 run_tests.py
+test2:
+	python3 test2.py	
 clean:
 	rm ./results/*
