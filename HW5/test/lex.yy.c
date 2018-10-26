@@ -479,12 +479,12 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "wardg.l"
+#line 1 "../bison/wardg.l"
 /*    mfpl.l
  
  	Specifications of tokens for the MFPL language.
  */
-#line 7 "wardg.l"
+#line 7 "../bison/wardg.l"
 
 #line 490 "lex.yy.c"
 /*
@@ -710,7 +710,7 @@ YY_DECL
 		}
 
 	{
-#line 36 "wardg.l"
+#line 36 "../bison/wardg.l"
 
 
 #line 717 "lex.yy.c"
@@ -772,7 +772,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 38 "wardg.l"
+#line 38 "../bison/wardg.l"
 {
 			printf("TOKEN: LPAREN    LEXEME: %s\n", yytext);
 			return T_LPAREN;
@@ -780,7 +780,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 42 "wardg.l"
+#line 42 "../bison/wardg.l"
 {
 			printf("TOKEN: RPAREN    LEXEME: %s\n", yytext);
 			return T_RPAREN;
@@ -788,7 +788,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 46 "wardg.l"
+#line 46 "../bison/wardg.l"
 {
 			printf("TOKEN: ADD       LEXEME: %s\n", yytext);
 			return T_ADD;
@@ -796,7 +796,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 50 "wardg.l"
+#line 50 "../bison/wardg.l"
 {
 			printf("TOKEN: SUB       LEXEME: %s\n", yytext);
 			return T_SUB;
@@ -804,7 +804,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 54 "wardg.l"
+#line 54 "../bison/wardg.l"
 {
 			printf("TOKEN: MULT      LEXEME: %s\n", yytext);
 			return T_MULT;
@@ -812,7 +812,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 58 "wardg.l"
+#line 58 "../bison/wardg.l"
 {
 			printf("TOKEN: DIV       LEXEME: %s\n", yytext);
 			return T_DIV;
@@ -820,7 +820,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 62 "wardg.l"
+#line 62 "../bison/wardg.l"
 {
 			printf("TOKEN: GT        LEXEME: %s\n", yytext);
 			return T_GT;
@@ -828,7 +828,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 66 "wardg.l"
+#line 66 "../bison/wardg.l"
 {
 			printf("TOKEN: GE        LEXEME: %s\n", yytext);
 			return T_GE;
@@ -836,7 +836,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 70 "wardg.l"
+#line 70 "../bison/wardg.l"
 {
 			printf("TOKEN: LT        LEXEME: %s\n", yytext);
 			return T_LT;
@@ -844,7 +844,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 74 "wardg.l"
+#line 74 "../bison/wardg.l"
 {
 			printf("TOKEN: LE        LEXEME: %s\n", yytext);
 			return T_LE;
@@ -852,7 +852,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 78 "wardg.l"
+#line 78 "../bison/wardg.l"
 {
 			printf("TOKEN: EQ        LEXEME: %s\n", yytext);
 			return T_EQ;
@@ -860,7 +860,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 82 "wardg.l"
+#line 82 "../bison/wardg.l"
 {
 			printf("TOKEN: NE        LEXEME: %s\n", yytext);
 			return T_NE;
@@ -868,7 +868,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 86 "wardg.l"
+#line 86 "../bison/wardg.l"
 {
 			printf("TOKEN: LETSTAR   LEXEME: %s\n", yytext);
 			beginScope();
@@ -877,7 +877,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 91 "wardg.l"
+#line 91 "../bison/wardg.l"
 {
 			printf("TOKEN: IF        LEXEME: %s\n", yytext);
 			return T_IF;
@@ -885,7 +885,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 95 "wardg.l"
+#line 95 "../bison/wardg.l"
 {
 			printf("TOKEN: LAMBDA    LEXEME: %s\n", yytext);
 			beginScope();
@@ -894,7 +894,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 100 "wardg.l"
+#line 100 "../bison/wardg.l"
 {
 			printf("TOKEN: PRINT     LEXEME: %s\n", yytext);
 			return T_PRINT;
@@ -902,7 +902,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 104 "wardg.l"
+#line 104 "../bison/wardg.l"
 {
 			printf("TOKEN: INPUT     LEXEME: %s\n", yytext);
 			return T_INPUT;
@@ -910,7 +910,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 108 "wardg.l"
+#line 108 "../bison/wardg.l"
 {
 			printf("TOKEN: T         LEXEME: %s\n", yytext);
 			return T_T;
@@ -918,7 +918,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 112 "wardg.l"
+#line 112 "../bison/wardg.l"
 {
 			printf("TOKEN: NIL       LEXEME: %s\n", yytext);
 			return T_NIL;
@@ -926,7 +926,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 116 "wardg.l"
+#line 116 "../bison/wardg.l"
 {
 			printf("TOKEN: AND       LEXEME: %s\n", yytext);
 			return T_AND;
@@ -934,7 +934,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 120 "wardg.l"
+#line 120 "../bison/wardg.l"
 {
 			printf("TOKEN: OR        LEXEME: %s\n", yytext);
 			return T_OR;
@@ -942,7 +942,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 124 "wardg.l"
+#line 124 "../bison/wardg.l"
 {
 			printf("TOKEN: NOT       LEXEME: %s\n", yytext);
 			return T_NOT;
@@ -950,7 +950,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 128 "wardg.l"
+#line 128 "../bison/wardg.l"
 {
 			printf("TOKEN: INTCONST  LEXEME: %s\n", yytext);
 			return T_INTCONST;
@@ -958,7 +958,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 132 "wardg.l"
+#line 132 "../bison/wardg.l"
 {
 			printf("TOKEN: STRCONST  LEXEME: %s\n", yytext);
 			return T_STRCONST;
@@ -966,7 +966,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 136 "wardg.l"
+#line 136 "../bison/wardg.l"
 {
 			yylval.text = strdup(yytext);
 			printf("TOKEN: IDENT     LEXEME: %s\n", yytext);
@@ -975,13 +975,13 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 141 "wardg.l"
+#line 141 "../bison/wardg.l"
 { }
 	YY_BREAK
 case 27:
 /* rule 27 can match eol */
 YY_RULE_SETUP
-#line 142 "wardg.l"
+#line 142 "../bison/wardg.l"
 {
 				numLines++;
                 }
@@ -991,12 +991,12 @@ case 28:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 145 "wardg.l"
+#line 145 "../bison/wardg.l"
 { }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 146 "wardg.l"
+#line 146 "../bison/wardg.l"
 {
 			printf("TOKEN: UNKNOWN   LEXEME: %s\n",
 			       yytext);
@@ -1005,7 +1005,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 152 "wardg.l"
+#line 152 "../bison/wardg.l"
 ECHO;
 	YY_BREAK
 #line 1012 "lex.yy.c"
@@ -2013,7 +2013,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 152 "wardg.l"
+#line 152 "../bison/wardg.l"
 
 
 

@@ -92,11 +92,6 @@ COMMENT           ";".*$
 			printf("TOKEN: IF        LEXEME: %s\n", yytext);
 			return T_IF;
 			}
-"lambda"		{
-			printf("TOKEN: LAMBDA    LEXEME: %s\n", yytext);
-			beginScope();
-			return T_LAMBDA;
-			}
 "print"		{
 			printf("TOKEN: PRINT     LEXEME: %s\n", yytext);
 			return T_PRINT;
@@ -134,13 +129,13 @@ COMMENT           ";".*$
 			return T_STRCONST;
 			}
 {IDENT}		{
-			yylval.text = strdup(yytext);
 			printf("TOKEN: IDENT     LEXEME: %s\n", yytext);
+			yylval.text = strdup(yytext);
 			return T_IDENT;
 			}
 {WSPACE}		{ }
 {NEWLINE}       {
-				numLines++;
+                 lineNum++;
                 }
 {COMMENT}		{ }
 .			{
@@ -150,6 +145,5 @@ COMMENT           ";".*$
 			}
 
 %%
-
 
 
