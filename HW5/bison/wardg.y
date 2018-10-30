@@ -129,6 +129,7 @@ N_EXPR		: N_CONST
 			{
 				printRule("EXPR", "IDENT");
 				string ident = string($1);
+				printf("%s\n",ident.c_str());
 				TYPE_INFO exprTypeInfo =findEntryInAnyScope(ident);
 				if (exprTypeInfo.type == UNDEFINED)
 				{
@@ -214,6 +215,7 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 				printRule("ARITHLOGIC_EXPR",
 				          "UN_OP EXPR");
                       $$.type = BOOL;
+					  copyTypeInfo($$,$2);
 					  if($2.bval==false)
 					  {
 						  $$.bval=true;
@@ -222,7 +224,6 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 					  {
 						  $$.bval=false;
 					  }
-					   //printf("newVal %d", $$.bval);
 				}
 				| N_BIN_OP N_EXPR N_EXPR
 				{
@@ -247,19 +248,16 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 						if(arith.top()=='+')
 						{
 							$$.nval = $2.nval+$3.nval;
-							//printf("Values of $$ and 1$ %d %d\n\n", $$.nval, $3.nval);
 							arith.pop();
 						}
 						else if(arith.top() == '-')
 						{
 							$$.nval = $2.nval-$3.nval;
-							//printf("Values of $$ and 1$ %d %d\n\n", $$.nval, $3.nval);
 							arith.pop();
 						}
 						else if(arith.top()== '*')
 						{
 							$$.nval = $2.nval*$3.nval;
-							//printf("Values of $$ and 1$ %d %d\n\n", $$.nval, $3.nval);
 							arith.pop();
 						}
 					    else if(arith.top()== '/')
@@ -269,7 +267,6 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 								yyerror("Attempted division by zero");
 							}
 							$$.nval = $2.nval/$3.nval;
-							//printf("Values of $$ and 1$ %d %d\n\n", $$.nval, $3.nval);
 							arith.pop();
 						}
                         break;
@@ -315,7 +312,6 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 								$$.bval = false;
 							}
 							rel.pop();
-							//printf("BVAL IN REL %d", $$.bval);
 						}
 					    else if(rel.top()=="<")
 						{
@@ -359,11 +355,9 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 							string s2 = $3.sval;
 							if (s1 == s2)
 							{
-								// printf("\n %s == %s \n",to_string($2.sval).c_str(), to_string($3.sval).c_str());
 								$$.bval = true;
 							}
 							else{
-								// printf("\n %s != %s \n",to_string($2.sval).c_str(), to_string($3.sval).c_str());
 								$$.bval = false;
 							}
 							rel.pop();
@@ -387,7 +381,7 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
                      	;
 N_IF_EXPR    	: T_IF N_EXPR N_EXPR N_EXPR
 			{
-			printRule("IF_EXPR", "if EXPR EXPR EXPR");
+				printRule("IF_EXPR", "if EXPR EXPR EXPR");
 				if($2.bval == true){
 					copyTypeInfo($$, $3);
 				}
@@ -402,7 +396,7 @@ N_LET_EXPR      : T_LETSTAR T_LPAREN N_ID_EXPR_LIST T_RPAREN
 				printRule("LET_EXPR", 
 						"let* ( ID_EXPR_LIST ) EXPR");
 				endScope();
-					$$.type = $5.type; 
+				copyTypeInfo($$,$5);
 			}
 			;
 N_ID_EXPR_LIST  : /* epsilon */
@@ -417,29 +411,28 @@ N_ID_EXPR_LIST  : /* epsilon */
 				printf("___Adding %s to symbol table\n", $3);
 				printf("\n%s\n\n",to_string($4.nval).c_str());
 
-				// scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme));
-
-				
-                //  if (! success) 
-                //  {
-                //    yyerror("Multiply defined identifier");
-                //    return(0);
-                //  }
+				if (! scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,$4))) 
+				{
+					yyerror("Multiply defined identifier");
+					return(0);
+				}
 			}
 			;
 N_PRINT_EXPR    : T_PRINT N_EXPR
 			{
-			printRule("PRINT_EXPR", "print EXPR");
-			copyTypeInfo($$, $2);
+				printf("HELLO WORLD\n");
+				printRule("PRINT_EXPR", "print EXPR");
+				
+				copyTypeInfo($$, $2);
+				printf("%s\n", $$.sval);
 
-			printf("%s\n",$2.sval);
 
 			}
 			;
 N_INPUT_EXPR    : T_INPUT
 			{
-			printRule("INPUT_EXPR", "input");
-			$$.type = INT_OR_STR;
+				printRule("INPUT_EXPR", "input");
+				$$.type = INT_OR_STR;
 			}
 			;
 N_EXPR_LIST     : N_EXPR N_EXPR_LIST

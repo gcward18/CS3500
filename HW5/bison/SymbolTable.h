@@ -23,7 +23,7 @@ public:
     if ((itr = hashTable.find(x.getName())) == hashTable.end())
     {
       hashTable.insert(make_pair(x.getName(), x));
-	return(true);
+	    return(true);
     }
     else return(false);
   }
@@ -39,14 +39,6 @@ public:
       return(info);
     else return(itr->second.getTypeInfo());
   }
-
-
-  // void copyTypeInfo(TYPE_INFO& target, TYPE_INFO& source){
-  //   target.type = source.type;
-  //   target.sval = source.sval;
-  //   target.nval = source.nval;
-  //   target.bval = source.bval;
-  // }
 };
 
 #endif  // SYMBOL_TABLE_H

@@ -38,18 +38,19 @@ public:
   // Constructors
   SYMBOL_TABLE_ENTRY( ) 
   { 
+    printf("ADDING TO SYMBOL TABLE\n");
     name = ""; 
     typeInfo.type = UNDEFINED; 
   }
 
   SYMBOL_TABLE_ENTRY(const string theName,TYPE_INFO theType)
   {
+    printf("ADDING TO SYMBOL TABLE\n");
     name = theName;
     copyTypeInfo(typeInfo, theType);
   }
   // SYMBOL_TABLE_ENTRY(const string theName, const TYPE_INFO theType, char* strval) 
   // {
-  //   printf("ADDING TO SYMBOL TABLE");
   //   name = theName;
   //   typeInfo.type = theType.type;
   //   typeInfo.nval = 0;
