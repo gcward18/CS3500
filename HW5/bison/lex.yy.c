@@ -706,7 +706,7 @@ YY_DECL
 		}
 
 	{
-#line 36 "wardg.l"
+#line 37 "wardg.l"
 
 
 #line 713 "lex.yy.c"
@@ -768,7 +768,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 38 "wardg.l"
+#line 39 "wardg.l"
 {
 			printf("TOKEN: LPAREN    LEXEME: %s\n", yytext);
 			return T_LPAREN;
@@ -776,7 +776,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 42 "wardg.l"
+#line 43 "wardg.l"
 {
 			printf("TOKEN: RPAREN    LEXEME: %s\n", yytext);
 			return T_RPAREN;
@@ -784,7 +784,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 46 "wardg.l"
+#line 47 "wardg.l"
 {
 			printf("TOKEN: ADD       LEXEME: %s\n", yytext);
 			return T_ADD;
@@ -792,7 +792,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 50 "wardg.l"
+#line 51 "wardg.l"
 {
 			printf("TOKEN: SUB       LEXEME: %s\n", yytext);
 			return T_SUB;
@@ -800,7 +800,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 54 "wardg.l"
+#line 55 "wardg.l"
 {
 			printf("TOKEN: MULT      LEXEME: %s\n", yytext);
 			return T_MULT;
@@ -808,7 +808,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 58 "wardg.l"
+#line 59 "wardg.l"
 {
 			printf("TOKEN: DIV       LEXEME: %s\n", yytext);
 			return T_DIV;
@@ -816,7 +816,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 62 "wardg.l"
+#line 63 "wardg.l"
 {
 			printf("TOKEN: GT        LEXEME: %s\n", yytext);
 			return T_GT;
@@ -824,7 +824,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 66 "wardg.l"
+#line 67 "wardg.l"
 {
 			printf("TOKEN: GE        LEXEME: %s\n", yytext);
 			return T_GE;
@@ -832,7 +832,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 70 "wardg.l"
+#line 71 "wardg.l"
 {
 			printf("TOKEN: LT        LEXEME: %s\n", yytext);
 			return T_LT;
@@ -840,7 +840,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 74 "wardg.l"
+#line 75 "wardg.l"
 {
 			printf("TOKEN: LE        LEXEME: %s\n", yytext);
 			return T_LE;
@@ -848,7 +848,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 78 "wardg.l"
+#line 79 "wardg.l"
 {
 			printf("TOKEN: EQ        LEXEME: %s\n", yytext);
 			return T_EQ;
@@ -856,7 +856,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 82 "wardg.l"
+#line 83 "wardg.l"
 {
 			printf("TOKEN: NE        LEXEME: %s\n", yytext);
 			return T_NE;
@@ -864,7 +864,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 86 "wardg.l"
+#line 87 "wardg.l"
 {
 			printf("TOKEN: LETSTAR   LEXEME: %s\n", yytext);
 			beginScope();
@@ -873,7 +873,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 91 "wardg.l"
+#line 92 "wardg.l"
 {
 			printf("TOKEN: IF        LEXEME: %s\n", yytext);
 			return T_IF;
@@ -881,7 +881,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 95 "wardg.l"
+#line 96 "wardg.l"
 {
 			printf("TOKEN: PRINT     LEXEME: %s\n", yytext);
 			return T_PRINT;
@@ -889,7 +889,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 99 "wardg.l"
+#line 100 "wardg.l"
 {
 			printf("TOKEN: INPUT     LEXEME: %s\n", yytext);
 			return T_INPUT;
@@ -897,7 +897,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 103 "wardg.l"
+#line 104 "wardg.l"
 {
 			printf("TOKEN: T         LEXEME: %s\n", yytext);
 			return T_T;
@@ -905,7 +905,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 107 "wardg.l"
+#line 108 "wardg.l"
 {
 			printf("TOKEN: NIL       LEXEME: %s\n", yytext);
 			return T_NIL;
@@ -913,7 +913,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 111 "wardg.l"
+#line 112 "wardg.l"
 {
 			printf("TOKEN: AND       LEXEME: %s\n", yytext);
 			return T_AND;
@@ -921,7 +921,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 115 "wardg.l"
+#line 116 "wardg.l"
 {
 			printf("TOKEN: OR        LEXEME: %s\n", yytext);
 			return T_OR;
@@ -929,7 +929,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 119 "wardg.l"
+#line 120 "wardg.l"
 {
 			printf("TOKEN: NOT       LEXEME: %s\n", yytext);
 			return T_NOT;
@@ -937,40 +937,40 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 123 "wardg.l"
+#line 124 "wardg.l"
 {
 			printf("TOKEN: INTCONST  LEXEME: %s\n", yytext);
-			yylval.text = strdup(yytext);
+			yylval.typeInfo.nval = atoi(yytext); 
 			return T_INTCONST;
-		}
+			}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 128 "wardg.l"
+#line 129 "wardg.l"
 {
 			printf("TOKEN: STRCONST  LEXEME: %s\n", yytext);
-			yylval.text = strdup(yytext);
+			yylval.typeInfo.sval = strdup(yytext);
 			return T_STRCONST;
-		}
+			}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 133 "wardg.l"
+#line 134 "wardg.l"
 {
 			printf("TOKEN: IDENT     LEXEME: %s\n", yytext);
 			yylval.text = strdup(yytext);
 			return T_IDENT;
-		}
+			}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 138 "wardg.l"
+#line 139 "wardg.l"
 { }
 	YY_BREAK
 case 26:
 /* rule 26 can match eol */
 YY_RULE_SETUP
-#line 139 "wardg.l"
+#line 140 "wardg.l"
 {
                  lineNum++;
                 }
@@ -980,21 +980,21 @@ case 27:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 142 "wardg.l"
+#line 143 "wardg.l"
 { }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 143 "wardg.l"
+#line 144 "wardg.l"
 {
 			printf("TOKEN: UNKNOWN   LEXEME: %s\n",
 			       yytext);
 			return T_UNKNOWN;
-		}
+			}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 149 "wardg.l"
+#line 150 "wardg.l"
 ECHO;
 	YY_BREAK
 #line 1001 "lex.yy.c"
@@ -2002,7 +2002,8 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 149 "wardg.l"
+#line 150 "wardg.l"
+
 
 
 

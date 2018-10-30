@@ -1,8 +1,9 @@
 TOKEN: INTCONST  LEXEME: -42
 CONST -> INTCONST
--42 -> -42
 EXPR -> CONST
 START -> EXPR
 
 ---- Completed parsing ----
 
+
+Value of the expression is: -42 

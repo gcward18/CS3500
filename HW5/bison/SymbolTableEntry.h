@@ -17,13 +17,14 @@ using namespace std;
    
 #define NOT_APPLICABLE 	-1
 
+char NA[] = {'n','a'};
+
 typedef struct 
 { 
-  	int   type;       // one of the above type codes
-
-	char* sValue;
-	int   nValue;
-	bool  bValue;
+  int type;       // one of the above type codes
+  int nval;
+  char* sval;
+  bool bval; 
 } TYPE_INFO;
 
 class SYMBOL_TABLE_ENTRY 
@@ -38,29 +39,40 @@ public:
   SYMBOL_TABLE_ENTRY( ) 
   { 
     name = ""; 
-    typeInfo.type  = UNDEFINED; 
-
+    typeInfo.type = UNDEFINED; 
   }
 
-  SYMBOL_TABLE_ENTRY(const string theName, 
-                     const TYPE_INFO theType) 
+  SYMBOL_TABLE_ENTRY(const string theName,TYPE_INFO theType)
   {
     name = theName;
-    typeInfo.type   = theType.type;
-    
-    if(theType.type == INT){
-  	typeInfo.nValue = theType.nValue;
-    }else if(theType.type == STR){
-	typeInfo.sValue = theType.sValue;
-    }else if(theType.type == BOOL){
-	typeInfo.bValue = theType.bValue;
-    }
+    copyTypeInfo(typeInfo, theType);
   }
+  // SYMBOL_TABLE_ENTRY(const string theName, const TYPE_INFO theType, char* strval) 
+  // {
+  //   printf("ADDING TO SYMBOL TABLE");
+  //   name = theName;
+  //   typeInfo.type = theType.type;
+  //   typeInfo.nval = 0;
+  //   strcpy(strval, typeInfo.sval);
+  // }
+  // SYMBOL_TABLE_ENTRY(const string theName, const TYPE_INFO theType, const int numval) 
+  // {
+  //   name = theName;
+  //   typeInfo.type = theType.type;
+  //   typeInfo.nval = numval;
+  //   strcpy(NA, typeInfo.sval);
+  // }
 
-
+  void copyTypeInfo(TYPE_INFO& target, TYPE_INFO& source){
+    target.type = source.type;
+    target.sval = source.sval;
+    target.nval = source.nval;
+    target.bval = source.bval;
+  }
   // Accessors
-  string getName()        const { return name;      }
-  TYPE_INFO getTypeInfo() const { return typeInfo;  }
+  string getName() const { return name; }
+  TYPE_INFO getTypeInfo() const { return typeInfo; }
+  int get_nval(){return typeInfo.nval; }
 };
 
 #endif  // SYMBOL_TABLE_ENTRY_H

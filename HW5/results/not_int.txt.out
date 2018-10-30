@@ -3,7 +3,6 @@ TOKEN: NOT       LEXEME: not
 UN_OP -> not
 TOKEN: INTCONST  LEXEME: -42
 CONST -> INTCONST
--42 -> -42
 EXPR -> CONST
 ARITHLOGIC_EXPR -> UN_OP EXPR
 PARENTHESIZED_EXPR -> ARITHLOGIC_EXPR
@@ -13,3 +12,5 @@ START -> EXPR
 
 ---- Completed parsing ----
 
+
+Value of the expression is: nil 
