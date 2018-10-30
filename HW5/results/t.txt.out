@@ -1,7 +1,0 @@
-TOKEN: T         LEXEME: t
-CONST -> t
-EXPR -> CONST
-START -> EXPR
-
----- Completed parsing ----
-

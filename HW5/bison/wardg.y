@@ -57,7 +57,10 @@ extern "C" {
 
 %union {
   char* text;
-  int num;
+  int   num;
+  int   nVal;
+  char*  sVal;
+  bool  bVal;
   TYPE_INFO typeInfo;
 };
 
@@ -70,7 +73,7 @@ extern "C" {
 %token  T_LT T_GT T_LE T_GE T_EQ T_NE T_AND T_OR T_NOT	 
 %token  T_INTCONST T_STRCONST T_T T_NIL T_IDENT T_UNKNOWN
 
-%type	<text> T_IDENT
+%type <text> T_IDENT T_STRCONST T_INTCONST T_T T_NIL
 %type <typeInfo> N_EXPR N_PARENTHESIZED_EXPR N_ARITHLOGIC_EXPR  
 %type <typeInfo> N_CONST N_IF_EXPR N_PRINT_EXPR N_INPUT_EXPR 
 %type <typeInfo> N_LET_EXPR N_EXPR_LIST  
@@ -87,67 +90,79 @@ extern "C" {
 %%
 N_START		: N_EXPR
 			{
-			printRule("START", "EXPR");
-			printf("\n---- Completed parsing ----\n\n");
-			return 0;
+				printRule("START", "EXPR");
+				printf("\n---- Completed parsing ----\n\n");
+				return 0;
 			}
 			;
 N_EXPR		: N_CONST
 			{
-			printRule("EXPR", "CONST");
-			$$.type = $1.type; 
+				printRule("EXPR", "CONST");
 			}
                 | T_IDENT
-                {
-			printRule("EXPR", "IDENT");
-                string ident = string($1);
-                TYPE_INFO exprTypeInfo = 
-						findEntryInAnyScope(ident);
-                if (exprTypeInfo.type == UNDEFINED) 
-                {
-                  yyerror("Undefined identifier");
-                  return(0);
-               	}
-                $$.type = exprTypeInfo.type; 
+                	{
+				printRule("EXPR", "IDENT");
+				string ident = string($1);
+				TYPE_INFO exprTypeInfo = findEntryInAnyScope(ident);
+				if (exprTypeInfo.type == UNDEFINED) 
+				{
+				  yyerror("Undefined identifier");
+				  return(0);
+			       	}
+
+				copyTypeInfo($$, exprTypeInfo)
 			}
                 | T_LPAREN N_PARENTHESIZED_EXPR T_RPAREN
-                {
-			printRule("EXPR", "( PARENTHESIZED_EXPR )");
-			$$.type = $2.type; 
+               	 	{
+				printRule("EXPR", "( PARENTHESIZED_EXPR )");
+				$$.type = $2.type; 
 			}
 			;
 N_CONST		: T_INTCONST
 			{
-			printRule("CONST", "INTCONST");
-                $$.type = INT; 
+				printRule("CONST", "INTCONST");
+				string ident = string($1);
+				printRule(ident.c_str(),ident.c_str());
+				$$.type = INT; 
+				$$.nValue = stoi($1); 
 			}
                 | T_STRCONST
 			{
-			printRule("CONST", "STRCONST");
-                $$.type = STR; 
+				printRule("CONST", "STRCONST");
+				string ident = string($1);
+				
+				printRule(ident.c_str(),ident.c_str());
+				$$.type = STR; 
+				strcpy($$.sValue, ident.c_str()); 
 			}
                 | T_T
-                {
-			printRule("CONST", "t");
-                $$.type = BOOL; 
+		        {
+				printRule("CONST", "t");
+				string ident = string($1);
+				printRule(ident.c_str(),ident.c_str());
+				$$.type = BOOL; 
+				$$.bValue = true;
 			}
                 | T_NIL
-                {
-			printRule("CONST", "nil");
-			$$.type = BOOL; 
+                	{
+				printRule("CONST", "nil");
+				string ident = string($1);
+				printRule(ident.c_str(),ident.c_str());
+				$$.type = BOOL; 
+				$$.bValue = false;
 			}
 			;
 N_PARENTHESIZED_EXPR	: N_ARITHLOGIC_EXPR 
-				{
+			{
 				printRule("PARENTHESIZED_EXPR",
                                 "ARITHLOGIC_EXPR");
 				$$.type = $1.type; 
-				}
+			}
                       | N_IF_EXPR 
-				{
+			{
 				printRule("PARENTHESIZED_EXPR", "IF_EXPR");
 				$$.type = $1.type; 
-				}
+			}
                       | N_LET_EXPR 
 				{
 				printRule("PARENTHESIZED_EXPR", 
@@ -155,218 +170,230 @@ N_PARENTHESIZED_EXPR	: N_ARITHLOGIC_EXPR
 				$$.type = $1.type; 
 				}
                       | N_PRINT_EXPR 
-				{
+			{
 				printRule("PARENTHESIZED_EXPR", 
 					    "PRINT_EXPR");
 				$$.type = $1.type; 
-				}
+			}	
                       | N_INPUT_EXPR 
-				{
+			{	
 				printRule("PARENTHESIZED_EXPR",
 					    "INPUT_EXPR");
 				$$.type = $1.type; 
-				}
+			}
                      | N_EXPR_LIST 
-				{
+			{
 				printRule("PARENTHESIZED_EXPR",
 				          "EXPR_LIST");
 				$$.type = $1.type; 
-				}
+			}
 				;
 N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
-				{
+			{
 				printRule("ARITHLOGIC_EXPR", 
 				          "UN_OP EXPR");
-                      $$.type = BOOL; 
-				}
-				| N_BIN_OP N_EXPR N_EXPR
-				{
+                      		$$.type = BOOL; 
+			}
+			| N_BIN_OP N_EXPR N_EXPR
+			{
 				printRule("ARITHLOGIC_EXPR", 
 				          "BIN_OP EXPR EXPR");
-                      $$.type = BOOL;
-                      switch ($1)
-                      {
-                      case (ARITHMETIC_OP) :
-                        $$.type = INT;
-                        if (!isIntCompatible($2.type)) 
-                        {
-                          yyerror("Arg 1 must be integer");
-                          return(0);
-                     	  }
-                     	  if (!isIntCompatible($3.type)) 
-                       {
-                          yyerror("Arg 2 must be integer");
-                          return(0);
-                     	  }
-                        break;
+		        	$$.type = BOOL;
+		       		switch ($1)
+				{
+				      case (ARITHMETIC_OP) :
+				        $$.type = INT;
+				        if (!isIntCompatible($2.type)) 
+				        {
+				          yyerror("Arg 1 must be integer");
+				          return(0);
+			     	        }
+				     	  if (!isIntCompatible($3.type)) 
+				        {
+				          yyerror("Arg 2 must be integer");
+				          return(0);
+		     	  	        }
+				        break;
 
-				case (LOGICAL_OP) :
-                        break;
+						case (LOGICAL_OP) :
+				        break;
 
-                      case (RELATIONAL_OP) :
-                        if (!isIntOrStrCompatible($2.type)) 
-                        {
-                          yyerror("Arg 1 must be integer or string");
-                          return(0);
-                        }
-                        if (!isIntOrStrCompatible($3.type)) 
-                        {
-                          yyerror("Arg 2 must be integer or string");
-                          return(0);
-                        }
-                        if (isIntCompatible($2.type) &&
-                            !isIntCompatible($3.type)) 
-                        {
-                          yyerror("Arg 2 must be integer");
-                          return(0);
-                     	  }
-                        else if (isStrCompatible($2.type) &&
-                                 !isStrCompatible($3.type)) 
-                        {
-                               yyerror("Arg 2 must be string");
-                               return(0);
-                             }
-                        break; 
-                      }  // end switch
-				}
+				      case (RELATIONAL_OP) :
+				        if (!isIntOrStrCompatible($2.type)) 
+				        {
+				          yyerror("Arg 1 must be integer or string");
+				          return(0);
+				        }
+				        if (!isIntOrStrCompatible($3.type)) 
+				        {
+				          yyerror("Arg 2 must be integer or string");
+				          return(0);
+				        }
+				        if (isIntCompatible($2.type) &&
+				            !isIntCompatible($3.type)) 
+				        {
+				          yyerror("Arg 2 must be integer");
+				          return(0);
+			     	        }
+				        else if (isStrCompatible($2.type) &&
+				                 !isStrCompatible($3.type)) 
+				        {
+				               yyerror("Arg 2 must be string");
+				               return(0);
+			                }
+		               		break; 
+		              }  // end switch
+			}
                      	;
 N_IF_EXPR    	: T_IF N_EXPR N_EXPR N_EXPR
 			{
-			printRule("IF_EXPR", "if EXPR EXPR EXPR");
-                $$.type = $3.type | $4.type; 
+				printRule("IF_EXPR", "if EXPR EXPR EXPR");
+		        	$$.type = $3.type | $4.type; 
 			}
 			;
 N_LET_EXPR      : T_LETSTAR T_LPAREN N_ID_EXPR_LIST T_RPAREN 
                   N_EXPR
 			{
-			printRule("LET_EXPR", 
-				    "let* ( ID_EXPR_LIST ) EXPR");
-			endScope();
-                $$.type = $5.type; 
+				printRule("LET_EXPR", 
+					    "let* ( ID_EXPR_LIST ) EXPR");
+				endScope();
+		        	$$.type = $5.type; 
 			}
 			;
 N_ID_EXPR_LIST  : /* epsilon */
 			{
-			printRule("ID_EXPR_LIST", "epsilon");
+				printRule("ID_EXPR_LIST", "epsilon");
 			}
                 | N_ID_EXPR_LIST T_LPAREN T_IDENT N_EXPR T_RPAREN 
 			{
-			printRule("ID_EXPR_LIST", 
-                          "ID_EXPR_LIST ( IDENT EXPR )");
-			string lexeme = string($3);
-                 TYPE_INFO exprTypeInfo = $4;
-                 printf("___Adding %s to symbol table\n", $3);
-                 bool success = scopeStack.top().addEntry
-                                (SYMBOL_TABLE_ENTRY(lexeme,
-									 exprTypeInfo));
-                 if (! success) 
-                 {
-                   yyerror("Multiply defined identifier");
-                   return(0);
-                 }
+				printRule("ID_EXPR_LIST", 
+		                  "ID_EXPR_LIST ( IDENT EXPR )");
+				string lexeme = string($3);
+				TYPE_INFO exprTypeInfo = $4;
+				printf("___Adding %s to symbol table\n", $3);
+				bool success = scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,exprTypeInfo));
+				if (! success) 
+				{
+					yyerror("Multiply defined identifier");
+				 	return(0);
+				}
 			}
 			;
 N_PRINT_EXPR    : T_PRINT N_EXPR
 			{
-			printRule("PRINT_EXPR", "print EXPR");
-                $$.type = $2.type;
+				printRule("PRINT_EXPR", "print EXPR");
+		       	 	$$.type = $2.type;
 			}
 			;
 N_INPUT_EXPR    : T_INPUT
 			{
-			printRule("INPUT_EXPR", "input");
-			$$.type = INT_OR_STR;
+				printRule("INPUT_EXPR", "input");
+				$$.type = INT_OR_STR;
 			}
 			;
 N_EXPR_LIST     : N_EXPR N_EXPR_LIST  
 			{
-			printRule("EXPR_LIST", "EXPR EXPR_LIST");
-                $$.type = $2.type;
+				printRule("EXPR_LIST", "EXPR EXPR_LIST");
+		        	$$.type = $2.type;
 			}
                 | N_EXPR
 			{
-			printRule("EXPR_LIST", "EXPR");
-                $$.type = $1.type;
+				printRule("EXPR_LIST", "EXPR");
+		        	$$.type = $1.type;
 			}
 			;
-N_BIN_OP	     : N_ARITH_OP
+N_BIN_OP	: N_ARITH_OP
 			{
-			printRule("BIN_OP", "ARITH_OP");
-			$$ = ARITHMETIC_OP;
+				printRule("BIN_OP", "ARITH_OP");
+				$$ = ARITHMETIC_OP;
 			}
-			|
-			N_LOG_OP
+		|
+		N_LOG_OP
 			{
-			printRule("BIN_OP", "LOG_OP");
-			$$ = LOGICAL_OP;
+				printRule("BIN_OP", "LOG_OP");
+				$$ = LOGICAL_OP;
 			}
-			|
-			N_REL_OP
+		|
+		N_REL_OP
 			{
-			printRule("BIN_OP", "REL_OP");
-			$$ = RELATIONAL_OP;
+				printRule("BIN_OP", "REL_OP");
+				$$ = RELATIONAL_OP;
 			}
 			;
-N_ARITH_OP	     : T_ADD
+N_ARITH_OP	: T_ADD
 			{
-			printRule("ARITH_OP", "+");
+				printRule("ARITH_OP", "+");
 			}
                 | T_SUB
 			{
-			printRule("ARITH_OP", "-");
+				printRule("ARITH_OP", "-");
 			}
-			| T_MULT
+		| T_MULT
 			{
-			printRule("ARITH_OP", "*");
+				printRule("ARITH_OP", "*");
 			}
-			| T_DIV
+		| T_DIV
 			{
-			printRule("ARITH_OP", "/");
+				printRule("ARITH_OP", "/");
 			}
 			;
-N_REL_OP	     : T_LT
+N_REL_OP	: T_LT
 			{
-			printRule("REL_OP", "<");
+				printRule("REL_OP", "<");
 			}	
 			| T_GT
 			{
-			printRule("REL_OP", ">");
+				printRule("REL_OP", ">");
 			}	
 			| T_LE
 			{
-			printRule("REL_OP", "<=");
+				printRule("REL_OP", "<=");
 			}	
 			| T_GE
 			{
-			printRule("REL_OP", ">=");
+				printRule("REL_OP", ">=");
 			}	
 			| T_EQ
 			{
-			printRule("REL_OP", "=");
+				printRule("REL_OP", "=");
 			}	
 			| T_NE
 			{
-			printRule("REL_OP", "/=");
+				printRule("REL_OP", "/=");
 			}
 			;	
 N_LOG_OP	     : T_AND
 			{
-			printRule("LOG_OP", "and");
+				printRule("LOG_OP", "and");
 			}	
 			| T_OR
 			{
-			printRule("LOG_OP", "or");
+				printRule("LOG_OP", "or");
 			}
 			;
 N_UN_OP	     : T_NOT
 			{
-			printRule("UN_OP", "not");
+				printRule("UN_OP", "not");
 			}
 			;
 %%
 
 #include "lex.yy.c"
 extern FILE *yyin;
+
+
+void copyTypeInfo(TYPE_INFO& target, TYPE_INFO& source)
+{
+
+	target.type = source.type; 
+	if(source.type == INT){
+		target.nValue = source.nValue;
+	}else if(source.type == STR){
+		target.sValue = source.sValue;
+	}else if(source.type == BOOL){
+		target.bValue = source.bValue;
+	}
+} 
 
 bool isIntCompatible(const int theType) 
 {

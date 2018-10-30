@@ -40,6 +40,18 @@ public:
     else return(itr->second.getTypeInfo());
   }
 
+  void copyTypeInfo(TYPE_INFO& target, TYPE_INFO& source)
+  {
+
+	target.type = source.type; 
+	if(source.type == INT){
+		target.nValue = source.nValue;
+	}else if(source.type == STR){
+		target.sValue = source.sValue;
+	}else if(source.type == BOOL){
+		target.bValue = source.bValue;
+	}
+  } 
 };
 
 #endif  // SYMBOL_TABLE_H

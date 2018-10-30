@@ -11,25 +11,25 @@
  *	Definitions of regular expressions
 */
 
-WSPACE		[ \t\r]+
-NEWLINE          \n
+WSPACE			[ \t\r]+
+NEWLINE          	\n
 LO_ALPHA		[a-z]
 HI_ALPHA		[A-Z]
 ALPHA			{LO_ALPHA}|{HI_ALPHA}
-DIGIT            [0-9]
+DIGIT            	[0-9]
 ALPHANUM		{ALPHA}|{DIGIT}
 UNDERSCORE		_
 
 IDENT			({UNDERSCORE}|{ALPHA})({ALPHANUM}|{UNDERSCORE})*
 
-NEG_INTCONST	"-"[0-9]+
-POS_INTCONST	("+")?[0-9]+
-INTCONST        {NEG_INTCONST}|{POS_INTCONST}
+NEG_INTCONST		"-"[0-9]+
+POS_INTCONST		("+")?[0-9]+
+INTCONST        	{NEG_INTCONST}|{POS_INTCONST}
 
-DOUBLE_QUOTE      \"
-STRCONST         {DOUBLE_QUOTE}[^\"\n]*{DOUBLE_QUOTE} 
+DOUBLE_QUOTE      	\"
+STRCONST         	{DOUBLE_QUOTE}[^\"\n]*{DOUBLE_QUOTE} 
 
-COMMENT           ";".*$      
+COMMENT           	";".*$      
 /*
  *	Tokens
 */
@@ -120,29 +120,31 @@ COMMENT           ";".*$
 			printf("TOKEN: NOT       LEXEME: %s\n", yytext);
 			return T_NOT;
 			}
-{INTCONST}	     {
+{INTCONST}	{
 			printf("TOKEN: INTCONST  LEXEME: %s\n", yytext);
+			yylval.typeInfo.nValue = atoi(yytext);
 			return T_INTCONST;
-			}
-{STRCONST}	     {
+		}
+{STRCONST}	{
 			printf("TOKEN: STRCONST  LEXEME: %s\n", yytext);
+			yylval.typeInfo.sValue = strdup(yytext);
 			return T_STRCONST;
-			}
+		}
 {IDENT}		{
 			printf("TOKEN: IDENT     LEXEME: %s\n", yytext);
 			yylval.text = strdup(yytext);
 			return T_IDENT;
-			}
-{WSPACE}		{ }
+		}
+{WSPACE}	{ }
 {NEWLINE}       {
                  lineNum++;
                 }
-{COMMENT}		{ }
-.			{
+{COMMENT}	{ }
+.		{
 			printf("TOKEN: UNKNOWN   LEXEME: %s\n",
 			       yytext);
 			return T_UNKNOWN;
-			}
+		}
 
 %%
 

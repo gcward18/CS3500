@@ -2,6 +2,7 @@
 #define SYMBOL_TABLE_ENTRY_H
 
 #include <string>
+#include <cstring>
 using namespace std;
 
 #define UNDEFINED  			-1   // Type codes
@@ -18,9 +19,11 @@ using namespace std;
 
 typedef struct 
 { 
-  int type;       // one of the above type codes
-  // int numParams;
-  string value;
+  	int   type;       // one of the above type codes
+
+	char* sValue;
+	int   nValue;
+	bool  bValue;
 } TYPE_INFO;
 
 class SYMBOL_TABLE_ENTRY 
@@ -36,7 +39,7 @@ public:
   { 
     name = ""; 
     typeInfo.type  = UNDEFINED; 
-    typeInfo.value = UNDEFINED;
+
   }
 
   SYMBOL_TABLE_ENTRY(const string theName, 
@@ -44,8 +47,16 @@ public:
   {
     name = theName;
     typeInfo.type   = theType.type;
-    typeInfo.value  = theType.value;
+    
+    if(theType.type == INT){
+  	typeInfo.nValue = theType.nValue;
+    }else if(theType.type == STR){
+	typeInfo.sValue = theType.sValue;
+    }else if(theType.type == BOOL){
+	typeInfo.bValue = theType.bValue;
+    }
   }
+
 
   // Accessors
   string getName()        const { return name;      }

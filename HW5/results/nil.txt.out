@@ -1,7 +1,0 @@
-TOKEN: NIL       LEXEME: nil
-CONST -> nil
-EXPR -> CONST
-START -> EXPR
-
----- Completed parsing ----
-
