@@ -45,24 +45,9 @@ public:
 
   SYMBOL_TABLE_ENTRY(const string theName,TYPE_INFO theType)
   {
-    printf("ADDING TO SYMBOL TABLE\n");
     name = theName;
     copyTypeInfo(typeInfo, theType);
   }
-  // SYMBOL_TABLE_ENTRY(const string theName, const TYPE_INFO theType, char* strval) 
-  // {
-  //   name = theName;
-  //   typeInfo.type = theType.type;
-  //   typeInfo.nval = 0;
-  //   strcpy(strval, typeInfo.sval);
-  // }
-  // SYMBOL_TABLE_ENTRY(const string theName, const TYPE_INFO theType, const int numval) 
-  // {
-  //   name = theName;
-  //   typeInfo.type = theType.type;
-  //   typeInfo.nval = numval;
-  //   strcpy(NA, typeInfo.sval);
-  // }
 
   void copyTypeInfo(TYPE_INFO& target, TYPE_INFO& source){
     target.type = source.type;
@@ -71,9 +56,9 @@ public:
     target.bval = source.bval;
   }
   // Accessors
-  string getName() const { return name; }
+  string getName()        const { return name; }
   TYPE_INFO getTypeInfo() const { return typeInfo; }
-  int get_nval(){return typeInfo.nval; }
+  int get_nval()                {return typeInfo.nval; }
 };
 
 #endif  // SYMBOL_TABLE_ENTRY_H

@@ -129,7 +129,6 @@ N_EXPR		: N_CONST
 			{
 				printRule("EXPR", "IDENT");
 				string ident = string($1);
-				printf("%s\n",ident.c_str());
 				TYPE_INFO exprTypeInfo =findEntryInAnyScope(ident);
 				if (exprTypeInfo.type == UNDEFINED)
 				{
@@ -215,7 +214,6 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 				printRule("ARITHLOGIC_EXPR",
 				          "UN_OP EXPR");
                       $$.type = BOOL;
-					  copyTypeInfo($$,$2);
 					  if($2.bval==false)
 					  {
 						  $$.bval=true;
@@ -248,16 +246,19 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 						if(arith.top()=='+')
 						{
 							$$.nval = $2.nval+$3.nval;
+							$$.bval = true;
 							arith.pop();
 						}
 						else if(arith.top() == '-')
 						{
 							$$.nval = $2.nval-$3.nval;
+							$$.bval = true;
 							arith.pop();
 						}
 						else if(arith.top()== '*')
 						{
 							$$.nval = $2.nval*$3.nval;
+							$$.bval = true;
 							arith.pop();
 						}
 					    else if(arith.top()== '/')
@@ -267,6 +268,7 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 								yyerror("Attempted division by zero");
 							}
 							$$.nval = $2.nval/$3.nval;
+							$$.bval = true;
 							arith.pop();
 						}
                         break;
@@ -382,7 +384,8 @@ N_ARITHLOGIC_EXPR	: N_UN_OP N_EXPR
 N_IF_EXPR    	: T_IF N_EXPR N_EXPR N_EXPR
 			{
 				printRule("IF_EXPR", "if EXPR EXPR EXPR");
-				if($2.bval == true){
+				
+			    if($2.bval == true){
 					copyTypeInfo($$, $3);
 				}
 				else{
@@ -408,8 +411,7 @@ N_ID_EXPR_LIST  : /* epsilon */
 				printRule("ID_EXPR_LIST", 
 							"ID_EXPR_LIST ( IDENT EXPR )");
 				string lexeme = string($3);
-				printf("___Adding %s to symbol table\n", $3);
-				printf("\n%s\n\n",to_string($4.nval).c_str());
+				printf("___Adding %s to symbol table\n", lexeme.c_str());
 
 				if (! scopeStack.top().addEntry(SYMBOL_TABLE_ENTRY(lexeme,$4))) 
 				{
@@ -420,11 +422,15 @@ N_ID_EXPR_LIST  : /* epsilon */
 			;
 N_PRINT_EXPR    : T_PRINT N_EXPR
 			{
-				printf("HELLO WORLD\n");
 				printRule("PRINT_EXPR", "print EXPR");
 				
 				copyTypeInfo($$, $2);
-				printf("%s\n", $$.sval);
+				if($$.type == STR)
+					printf("%s\n", $$.sval);
+				else if($$.type == INT)
+					printf("%d\n", $$.nval);
+				else if($$.type == BOOL)
+					printf("%b\n",$$.bval);
 
 
 			}

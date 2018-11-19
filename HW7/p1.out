@@ -1,0 +1,83 @@
+a.      cat(sylvester).
+        cat(felix).
+        dog(spike).
+        dog(fido).
+        primate(george).
+        primate("king kong").
+        bird(tweety).
+        hawk(tony).
+        fish(nemo).
+
+        mammal(X):-cat(X).
+        mammal(X):-dog(X).
+        mammal(X):-primate(X).
+
+        animal(X):-mammal(X).
+        animal(X):-bird(X).
+        animal(X):-fish(X).
+
+        bird(X):-hawk(X).
+
+        covering(X, "fur")      :-mammal(X).
+        covering(X, "feathers") :-bird(X).
+        covering(X, "scales")   :-fish(X).
+
+        legs(X,"4")             :-mammal(X).
+        legs(X,"2")             :-bird(X).
+        legs(X,"0")             :-fish(X).
+
+
+        sound(X,purr)           :-cat(X).
+        sound(X,bark)           :-dog(X).
+
+b.      Warning: /home/gcwzf4/Desktop/CS3500/HW7/hw7.pl:20:
+                Clauses of bird/1 are not together in the source-file
+                Earlier definition at /home/gcwzf4/Desktop/CS3500/HW7/hw7.pl:8
+                Current predicate: animal/1
+                Use :- discontiguous bird/1. to suppress this message
+        Welcome to SWI-Prolog (threaded, 64 bits, version 7.6.4)
+        SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
+        Please run ?- license. for legal details.
+
+        For online help and background, visit http://www.swi-prolog.org
+        For built-in help, use ?- help(Topic). or ?- apropos(Word).
+
+        ?- covering(felix,X).
+        X = "fur" .
+
+        ?- legs(fido,X).
+        X = "4" .
+
+        ?- bird(tony).
+        true.
+
+        ?- covering(nemo,X).
+        X = "scales".
+
+        ?- sound(spike,X).
+        X = bark.
+
+        ?- animal(X).
+        X = sylvester ;
+        X = felix ;
+        X = spike ;
+        X = fido ;
+        X = george ;
+        X = "king kong" ;
+        X = tweety ;
+        X = tony ;
+        X = nemo.
+
+        ?- halt.
+
+c.      I added logic for bipedal and quadrapedal mammals.
+
+        Welcome to SWI-Prolog (threaded, 64 bits, version 7.6.4)
+        SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
+        Please run ?- license. for legal details.
+
+        For online help and background, visit http://www.swi-prolog.org
+        For built-in help, use ?- help(Topic). or ?- apropos(Word).
+
+        ?- legs(george,X).
+        X = "2" .

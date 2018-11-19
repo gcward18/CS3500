@@ -1,0 +1,56 @@
+Consider a zoology domain where only the following information is available. All objects in
+the domain are an animal of one sort or another. There are 3 subclasses of animals:
+mammal, bird, and fish (i.e., if X is a mammal, then X is an animal). These subclasses are
+distinguished by their covering and by the number of legs that they have. A mammal is
+covered in fur, a bird is covered in feathers, and a fish is covered in scales (i.e., if X is a
+mammal, then fur is the covering of X). A mammal has 4 legs, a bird has 2 legs, and a fish has
+0 legs (i.e., if X is a fish, then 0 is the number of legs X has). There are 3 subclasses of
+mammals: cat, dog, and primate (i.e., if X is a cat, then X is a mammal). Cats and dogs make
+specific sounds: a cat makes a purr sound and a dog makes a bark sound (i.e., if X is a dog,
+then bark is the sound that X makes). Sylvester and Felix are examples of cats. Spike and
+Fido are examples of dogs. George and King Kong are primates. Tweety is a bird. There is a
+single subclass of birds called hawk (i.e., if X is a hawk, then X is a bird). Tony is a hawk. The
+only fish is Nemo.
+
+animal(X).
+covering(X,Y).
+legs(X,Y).
+mammal(X).
+sound(X,Y).
+cat(X).
+dog(X).
+primate(X).
+bird(X).
+hawk(X).
+fish(X).
+
+
+animal(X):-mammal(X).
+animal(X):-bird(X).
+animal(X):-fish(X).
+
+mammal(X):-covering(X,fur).
+bird(X):-covering(X,feathers).
+fish(X):-covering(X,scales).
+
+mammal(X):-legs(X,4).
+bird(X):-legs(X,2).
+fish(X):-legs(X,0).
+
+mammal(X):-cat(X).
+mammal(X):-dog(X).
+mammal(X):-primate(X).
+bird(X):-hawk(X).
+
+cat(X):-sound(X,purr).
+dog(X):-sound(X,bark).
+
+cat(sylvester).
+cat(felix).
+dog(spike).
+dog(fido).
+primate(george).
+primate(king kong).
+bird(tweety).
+hawk(tony).
+fish(nemo).
