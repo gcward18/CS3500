@@ -1,14 +1,15 @@
-motive(insanity).
-motive(money).
-motive(jealousy).
 
 access(X):-weapon_access(X),key_access(X),crime_access(X).
 
-
+weapon_access(X):-stay(X,thursday, lab).
+weapon_access(X):-stay(X,wednesday,csOffice).
+weapon_access(X):-stay(X,wednesday,bookstore).
+weapon_access(X):-stay(X,thursday,bookstore).
 key_access(davis).
-key_access(X):-stay  (X,monday   ,"cs office").
-crime_access(X):-stay(X,thursday ,"book store").
-crime_access(X):-stay(X,friday   ,"book store").
+key_access(X):-  stay(X,monday   ,csOffice).
+key_access(X):-  stay(X,tuesday  ,lab).
+crime_access(X):-stay(X,thursday ,bookstore).
+crime_access(X):-stay(X,friday   ,bookstore).
 
 stay(fu, monday, csOffice).
 stay(fu, tuesday, csOffice).
@@ -17,7 +18,7 @@ stay(fu, thursday, csOffice).
 stay(fu, friday, bookstore).
 stay(mcmillin, monday, lab).
 stay(mcmillin, tuesday, lab).
-5stay(mcmillin, wednesday, lab).
+stay(mcmillin, wednesday, lab).
 stay(mcmillin, thursday, csOffice).
 stay(mcmillin, friday, bookstore).
 stay(das, monday, bookstore).
@@ -53,10 +54,32 @@ stay(tauritz, friday, bookstore).
 
 victim(leopold).
 
+motive(X):-jealous(X,Y).
+motive(X):-insane(X).
+motive(X):-poor(X).
+
+envious(das,tauritz).
+
+jealous(X,Y):- friends_with(X,Z), friends_with(Y,Z).
 
 insane(sabharwal).
 insane(tauritz).
 
 poor(davis).
 poor(fu).
+poor(morales).
 poor(tauritz).
+
+friends_with(X,Y):-friends(X,Y).
+friends_with(X,Y):-friends(Y,X).
+
+friends(leopold,price).
+friends(price, mcmillin).
+friends(leopold, fu).
+friends(fu, markowsky).
+friends(markowsky, das)
+friends(das, tauritz).
+friends(sabharwal, tauritz).
+friends(sabharwal, mcmillin).
+
+murderer(X):- motive(X), access(X).
