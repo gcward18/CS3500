@@ -1,5 +1,5 @@
-
 access(X):-weapon_access(X),key_access(X),crime_access(X).
+
 
 weapon_access(X):-stay(X,thursday, lab).
 weapon_access(X):-stay(X,wednesday,csOffice).
@@ -52,15 +52,14 @@ stay(tauritz, wednesday, csOffice).
 stay(tauritz, thursday, csOffice).
 stay(tauritz, friday, bookstore).
 
-victim(leopold).
 
 motive(X):-jealous(X,Y).
 motive(X):-insane(X).
 motive(X):-poor(X).
 
-envious(das,tauritz).
-
 jealous(X,Y):- friends_with(X,Z), friends_with(Y,Z).
+
+victim(leopold).
 
 insane(sabharwal).
 insane(tauritz).

@@ -1,0 +1,17 @@
+gcwzf4@gcwzf4-Q504UAK:~/Desktop/CS3500/HW7$ prolog p3.pl 
+Warning: /home/gcwzf4/Desktop/CS3500/HW7/p3.pl:56:
+	Singleton variables: [Y]
+ERROR: /home/gcwzf4/Desktop/CS3500/HW7/p3.pl:79:24: Syntax error: Operator expected
+Welcome to SWI-Prolog (threaded, 64 bits, version 7.6.4)
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
+Please run ?- license. for legal details.
+
+For online help and background, visit http://www.swi-prolog.org
+For built-in help, use ?- help(Topic). or ?- apropos(Word).
+
+?- murderer(X).
+X = markowsky ;
+X = markowsky ;
+X = markowsky ;
+X = markowsky ;
+false.
