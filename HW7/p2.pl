@@ -57,3 +57,5 @@ color(yellow, twinkies).   color(yellow, twinkies).   animal(X)
 ALL STATEMENTS ARE TRUE, THUS TWINKIES ARE NOT GOOD TO EAT...... THEY MAY BE DELCIOUS BUT THEY ARE NOT NUTRITIOUS
 
 BACKWARDS CHAINING: Start at the end r
+
+              color(twinkies, yellow)                   

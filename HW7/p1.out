@@ -70,7 +70,8 @@ b.      Warning: /home/gcwzf4/Desktop/CS3500/HW7/hw7.pl:20:
 
         ?- halt.
 
-c.      I added logic for bipedal and quadrapedal mammals.
+c.      I added logic stating that if it's a mammal and not primate then 
+        the mammal will have 4 legs, else it's 2 legs.
 
         Welcome to SWI-Prolog (threaded, 64 bits, version 7.6.4)
         SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
